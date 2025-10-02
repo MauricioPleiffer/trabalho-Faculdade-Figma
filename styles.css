@@ -1,0 +1,461 @@
+/* Reset básico - removendo margens e paddings padrão */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos para todas as imagens */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Estilos gerais do body */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+/* Cabeçalho do site */
+header {
+    background-color: rgba(248,249,250,0.95);
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,123,255,0.1);
+    width: 100%;
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.header {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 70px;
+}
+
+.logo img {
+    height: 60px;
+    width: auto;
+    border: 1px solid #007bff;
+}
+
+nav {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+nav a {
+    text-decoration: none;
+    color: #666;
+    font-weight: 500;
+    padding: 8px 0;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #007bff;
+}
+
+/* Estilos dos botões */
+.botao {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,123,255,0.3);
+}
+
+.botao:hover {
+    background-color: #0056b3;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,123,255,0.4);
+}
+
+.botao-principal {
+    background-color: #007bff;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 600;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0,123,255,0.3);
+}
+
+.botao-principal:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,123,255,0.4);
+}
+
+.botao-secundario {
+    background-color: transparent;
+    color: #007bff;
+    padding: 15px 30px;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.botao-secundario:hover {
+    background-color: #007bff;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+}
+
+/* Seção principal */
+.principal {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.conteudo-principal {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+
+.texto-principal h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.texto-principal p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.botoes {
+    margin-top: 30px;
+}
+
+.imagem-principal img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.imagem-principal img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* Seção de serviços */
+#servicos {
+    padding: 80px 0;
+}
+
+.servicos {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.servico {
+    text-align: center;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,123,255,0.1);
+}
+
+.servico:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0,123,255,0.15);
+    border-color: rgba(0,123,255,0.2);
+}
+
+.servico img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.servico:hover img {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.servico h3 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.servico p {
+    color: #666;
+}
+
+/* Seção de preços */
+.precos {
+    padding: 80px 0;
+    background-color: #f8f9fa;
+}
+
+.cards-precos {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.card-preco {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,123,255,0.1);
+}
+
+.card-preco:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0,123,255,0.15);
+}
+
+.card-preco.destaque {
+    border: 2px solid #007bff;
+    transform: scale(1.05);
+    background: linear-gradient(135deg, rgba(0,123,255,0.05), rgba(0,123,255,0.02));
+    box-shadow: 0 12px 30px rgba(0,123,255,0.2);
+}
+
+.card-preco h4 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.preco {
+    font-size: 32px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 30px;
+}
+
+.preco span {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Seção sobre */
+#sobre {
+    padding: 80px 0;
+}
+
+.sobre {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+
+.texto-sobre h2 {
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.texto-sobre p {
+    margin-bottom: 20px;
+    color: #666;
+    line-height: 1.8;
+}
+
+.imagem-sobre img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.imagem-sobre img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* Galeria */
+.galeria {
+    padding: 80px 0;
+    background-color: #f8f9fa;
+    text-align: center;
+}
+
+.galeria h2 {
+    margin-bottom: 50px;
+    color: #333;
+}
+
+.fotos-galeria {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.fotos-galeria img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.fotos-galeria img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+/* Contato */
+.contato {
+    padding: 80px 0;
+    text-align: center;
+}
+
+.contato h2 {
+    margin-bottom: 40px;
+    color: #333;
+}
+
+.formulario-contato {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    gap: 15px;
+}
+
+.formulario-contato input {
+    flex: 1;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.formulario-contato input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+/* Rodapé */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 30px 0;
+}
+
+/* Responsividade básica */
+@media (max-width: 768px) {
+    .conteudo-principal {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .texto-principal h1 {
+        font-size: 36px;
+    }
+    
+    .servicos {
+        grid-template-columns: 1fr;
+    }
+    
+    .cards-precos {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-preco.destaque {
+        transform: none;
+    }
+    
+    .sobre {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .fotos-galeria {
+        grid-template-columns: 1fr;
+    }
+    
+    .formulario-contato {
+        flex-direction: column;
+    }
+    
+    nav {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .texto-principal h1 {
+        font-size: 28px;
+    }
+    
+    .botoes {
+        text-align: center;
+    }
+    
+    .botao-principal, .botao-secundario {
+        display: block;
+        margin: 10px 0;
+    }
+}
