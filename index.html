@@ -364,6 +364,19 @@ window.addEventListener('load', function () {
   var cadastroLink = document.getElementById('cadastroLink');
   if (cadastroLink) cadastroLink.addEventListener('click', function (e) { e.preventDefault(); fecharLogin(); abrirCadastro(); });
 
+    // Se o usuário clicar em 'Serviços' e não estiver logado, abre cadastro
+    var servicosLink = document.querySelector('a[href="#servicos"]');
+    if (servicosLink) {
+        servicosLink.addEventListener('click', function(e) {
+            // se não estiver logado, pede cadastro
+            if (!usuarioLogado) {
+                e.preventDefault();
+                abrirCadastro();
+            }
+            // se estiver logado, segue normalmente (ancora na página)
+        });
+    }
+
   var formCad = document.getElementById('cadastroForm');
   if (formCad) {
     formCad.addEventListener('submit', function (e) {

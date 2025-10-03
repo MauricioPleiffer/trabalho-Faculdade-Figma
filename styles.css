@@ -542,6 +542,7 @@ nav a:hover {
     padding: 20px;
     border-radius: 10px;
     width: 400px;
+    position: relative; /* permite posicionar o X com absolute */
 }
 
 .modal-header {
@@ -559,14 +560,18 @@ nav a:hover {
 
 .close {
     color: white;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: bold;
     cursor: pointer;
-    float: right;
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: transparent;
+    border: none;
 }
 
 .close:hover {
-    color: #ccc;
+    color: #f0f0f0;
 }
 
 .modal-body {
@@ -687,14 +692,18 @@ nav a:hover {
 /* Estilos específicos para o modal de cadastro */
 .close-cadastro {
     color: white;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: bold;
     cursor: pointer;
-    float: right;
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: transparent;
+    border: none;
 }
 
 .close-cadastro:hover {
-    color: #ccc;
+    color: #f0f0f0;
 }
 
 /* Responsividade básica */
