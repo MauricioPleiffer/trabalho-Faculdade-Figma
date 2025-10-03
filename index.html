@@ -22,7 +22,8 @@
                 <a href="#servicos">Serviços</a>
                 <a href="#precos">Preços</a>
                 <a href="#sobre">Sobre</a>
-                <a href="#contato" class="botao">Contato</a>
+                <a href="#contato">Contato</a>
+                <button id="loginBtn" class="botao-login">Login</button>
             </nav>
         </div>
     </header>
@@ -122,8 +123,371 @@
     </main>
 
     <!-- Rodapé -->
-    <footer>
-        <p>© 2025 Lave Já. Todos os direitos reservados.</p>
+    <footer class="footer-completo">
+        <div class="container-footer">
+            <!-- Seção Contato -->
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <div class="contato-item">
+                    <i class="icon">📞</i>
+                    <span>(11) 99999-9999</span>
+                </div>
+                <div class="contato-item">
+                    <i class="icon">📧</i>
+                    <span>contato@laveja.com.br</span>
+                </div>
+                <div class="contato-item">
+                    <i class="icon">🕒</i>
+                    <span>Seg - Sex: 8h às 18h<br>Sáb: 8h às 12h</span>
+                </div>
+            </div>
+
+            <!-- Seção Localização -->
+            <div class="footer-section">
+                <h3>Localização</h3>
+                <div class="contato-item">
+                    <i class="icon">📍</i>
+                    <span>Rua das Lavanderias, 123<br>Centro - São Paulo/SP<br>CEP: 01234-567</span>
+                </div>
+                <div class="contato-item">
+                    <i class="icon">🚗</i>
+                    <span>Estacionamento gratuito<br>para clientes</span>
+                </div>
+            </div>
+
+            <!-- Seção Sobre -->
+            <div class="footer-section">
+                <h3>Sobre a LaveJá</h3>
+                <p>Somos uma lavanderia familiar com mais de 15 anos de experiência no mercado. Nossa missão é cuidar das suas roupas com carinho e profissionalismo.</p>
+                <div class="redes-sociais">
+                    <a href="#" class="rede-social">📘 Facebook</a>
+                    <a href="#" class="rede-social">📷 Instagram</a>
+                    <a href="#" class="rede-social">🐦 Twitter</a>
+                </div>
+            </div>
+
+            <!-- Seção WhatsApp -->
+            <div class="footer-section whatsapp-section">
+                <h3>Fale Conosco</h3>
+                <p>Precisa de ajuda? Entre em contato pelo WhatsApp!</p>
+                <a href="https://wa.me/5511999999999?text=Olá! Gostaria de solicitar um serviço da LaveJá" 
+                   target="_blank" 
+                   class="botao-whatsapp">
+                    <i class="icon-whatsapp">💬</i>
+                    WhatsApp
+                </a>
+                <p class="whatsapp-info">Resposta rápida em até 5 minutos</p>
+            </div>
+        </div>
+
+        <!-- Linha de copyright -->
+        <div class="footer-bottom">
+            <p>© 2025 LaveJá - Lavanderia Profissional. Todos os direitos reservados.</p>
+            <p>Desenvolvido com ❤️ para cuidar das suas roupas</p>
+        </div>
     </footer>
+
+    <!-- Modal de Login -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Entrar na sua conta</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" placeholder="seu@email.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="senha">Senha:</label>
+                        <input type="password" id="senha" placeholder="Sua senha" required>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="lembrar">
+                            Lembrar de mim
+                        </label>
+                        <a href="#" class="esqueci-senha">Esqueci minha senha</a>
+                    </div>
+                    <button type="submit" class="botao-login-submit">Entrar</button>
+                </form>
+                <div class="divider">
+                    <span>ou</span>
+                </div>
+                <div class="social-login">
+                    <button class="botao-social google">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Entrar com Google
+                    </button>
+                    <button class="botao-social facebook">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                        Entrar com Facebook
+                    </button>
+                </div>
+                <div class="cadastro-link">
+                    <p>Não tem uma conta? <a href="#" id="cadastroLink">Cadastre-se aqui</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Cadastro -->
+    <div id="cadastroModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Criar Conta</h2>
+                <span class="close-cadastro">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="cadastroForm">
+                    <div class="input-group">
+                        <label for="nomeCadastro">Nome completo:</label>
+                        <input type="text" id="nomeCadastro" placeholder="Seu nome completo" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="emailCadastro">Email:</label>
+                        <input type="email" id="emailCadastro" placeholder="seu@email.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="senhaCadastro">Senha:</label>
+                        <input type="password" id="senhaCadastro" placeholder="Mínimo 6 caracteres" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="confirmarSenha">Confirmar senha:</label>
+                        <input type="password" id="confirmarSenha" placeholder="Digite a senha novamente" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="telefoneCadastro">Telefone:</label>
+                        <input type="tel" id="telefoneCadastro" placeholder="(11) 99999-9999" required>
+                    </div>
+                    <button type="submit" class="botao-login-submit">Criar Conta</button>
+                </form>
+                <div class="cadastro-link">
+                    <p>Já tem uma conta? <a href="#" id="loginLink">Faça login aqui</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis para guardar os dados
+        var usuarios = [];
+        var usuarioLogado = null;
+
+        // Carregar dados salvos
+        if (localStorage.getItem('usuarios')) {
+            usuarios = JSON.parse(localStorage.getItem('usuarios'));
+        }
+        if (localStorage.getItem('usuarioLogado')) {
+            usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+        }
+
+        // Criar usuário de teste
+        if (usuarios.length == 0) {
+            usuarios.push({
+                id: 1,
+                nome: 'João Silva',
+                email: 'joao@teste.com',
+                senha: '123456',
+                telefone: '(11) 99999-9999',
+                dataCadastro: new Date().toLocaleDateString()
+            });
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+        }
+
+        // Verificar se está logado quando carrega a página
+        window.onload = function() {
+            if (usuarioLogado) {
+                mudarBotaoLogin();
+            }
+        }
+
+        // Função para mudar o botão de login
+        function mudarBotaoLogin() {
+            var botao = document.getElementById('loginBtn');
+            botao.innerHTML = 'Olá, ' + usuarioLogado.nome;
+            botao.style.backgroundColor = '#28a745';
+        }
+
+        // Função para fazer logout
+        function fazerLogout() {
+            localStorage.removeItem('usuarioLogado');
+            usuarioLogado = null;
+            location.reload();
+        }
+
+        // Função para verificar se está logado
+        function verificarLogin() {
+            if (usuarioLogado == null) {
+                document.getElementById('loginModal').style.display = 'block';
+                return false;
+            }
+            return true;
+        }
+
+        // Botão de login
+        document.getElementById('loginBtn').onclick = function() {
+            if (usuarioLogado) {
+                if (confirm('Deseja fazer logout?')) {
+                    fazerLogout();
+                }
+            } else {
+                document.getElementById('loginModal').style.display = 'block';
+            }
+        }
+
+        // Fechar modal
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        // Fechar modal clicando fora
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('loginModal')) {
+                document.getElementById('loginModal').style.display = 'none';
+            }
+            if (event.target == document.getElementById('cadastroModal')) {
+                document.getElementById('cadastroModal').style.display = 'none';
+            }
+        }
+
+        // Enviar formulário de login
+        document.getElementById('loginForm').onsubmit = function() {
+            var email = document.getElementById('email').value;
+            var senha = document.getElementById('senha').value;
+            
+            // Procurar usuário
+            var encontrou = false;
+            for (var i = 0; i < usuarios.length; i++) {
+                if (usuarios[i].email == email && usuarios[i].senha == senha) {
+                    usuarioLogado = usuarios[i];
+                    localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+                    alert('Login realizado com sucesso!');
+                    document.getElementById('loginModal').style.display = 'none';
+                    mudarBotaoLogin();
+                    document.getElementById('loginForm').reset();
+                    encontrou = true;
+                    break;
+                }
+            }
+            
+            if (!encontrou) {
+                alert('Email ou senha incorretos!');
+            }
+            
+            return false;
+        }
+
+        // Botões sociais
+        document.querySelector('.botao-social.google').onclick = function() {
+            alert('Login com Google (em desenvolvimento)');
+        }
+
+        document.querySelector('.botao-social.facebook').onclick = function() {
+            alert('Login com Facebook (em desenvolvimento)');
+        }
+
+        // Link de cadastro
+        document.getElementById('cadastroLink').onclick = function() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('cadastroModal').style.display = 'block';
+            return false;
+        }
+
+        // Link esqueci senha
+        document.querySelector('.esqueci-senha').onclick = function() {
+            alert('Recuperar senha (em desenvolvimento)');
+            return false;
+        }
+
+        // Fechar modal de cadastro
+        document.querySelector('.close-cadastro').onclick = function() {
+            document.getElementById('cadastroModal').style.display = 'none';
+        }
+
+        // Enviar formulário de cadastro
+        document.getElementById('cadastroForm').onsubmit = function() {
+            var nome = document.getElementById('nomeCadastro').value;
+            var email = document.getElementById('emailCadastro').value;
+            var senha = document.getElementById('senhaCadastro').value;
+            var confirmarSenha = document.getElementById('confirmarSenha').value;
+            var telefone = document.getElementById('telefoneCadastro').value;
+
+            // Verificar senha
+            if (senha.length < 6) {
+                alert('A senha deve ter pelo menos 6 caracteres!');
+                return false;
+            }
+
+            if (senha != confirmarSenha) {
+                alert('As senhas não coincidem!');
+                return false;
+            }
+
+            // Verificar se email já existe
+            var emailExiste = false;
+            for (var i = 0; i < usuarios.length; i++) {
+                if (usuarios[i].email == email) {
+                    emailExiste = true;
+                    break;
+                }
+            }
+
+            if (emailExiste) {
+                alert('Este email já está cadastrado!');
+                return false;
+            }
+
+            // Criar novo usuário
+            var novoUsuario = {
+                id: Date.now(),
+                nome: nome,
+                email: email,
+                senha: senha,
+                telefone: telefone,
+                dataCadastro: new Date().toLocaleDateString()
+            };
+
+            usuarios.push(novoUsuario);
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+
+            alert('Conta criada com sucesso! Faça login para continuar.');
+            document.getElementById('cadastroModal').style.display = 'none';
+            document.getElementById('loginModal').style.display = 'block';
+            document.getElementById('cadastroForm').reset();
+
+            return false;
+        }
+
+        // Link para voltar ao login
+        document.getElementById('loginLink').onclick = function() {
+            document.getElementById('cadastroModal').style.display = 'none';
+            document.getElementById('loginModal').style.display = 'block';
+            return false;
+        }
+
+        // Verificar login nos botões
+        var botoes = document.querySelectorAll('.botao-principal, .botao');
+        for (var i = 0; i < botoes.length; i++) {
+            if (botoes[i].textContent.indexOf('Solicitar') != -1 || botoes[i].textContent.indexOf('Contato') != -1) {
+                botoes[i].onclick = function(event) {
+                    if (!verificarLogin()) {
+                        event.preventDefault();
+                    } else {
+                        alert('Redirecionando para solicitação...');
+                    }
+                }
+            }
+        }
+    </script>
 </body>
 </html>

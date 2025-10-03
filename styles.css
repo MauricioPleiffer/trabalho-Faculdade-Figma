@@ -52,20 +52,26 @@ header {
 
 nav {
     display: flex;
-    gap: 30px;
+    gap: 15px;
     align-items: center;
 }
 
 nav a {
     text-decoration: none;
-    color: #666;
+    color: white;
     font-weight: 500;
-    padding: 8px 0;
-    transition: color 0.3s ease;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    background-color: #007bff;
+    box-shadow: 0 2px 4px rgba(0,123,255,0.3);
 }
 
 nav a:hover {
-    color: #007bff;
+    background-color: #0056b3;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,123,255,0.4);
 }
 
 /* Estilos dos botões */
@@ -392,11 +398,303 @@ nav a:hover {
 }
 
 /* Rodapé */
-footer {
+.footer-completo {
     background-color: #333;
     color: white;
+    padding: 30px 0 20px;
+    margin-top: 30px;
+}
+
+.container-footer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.footer-section {
+    width: 23%;
+    margin-bottom: 20px;
+}
+
+.footer-section h3 {
+    color: #007bff;
+    margin-bottom: 15px;
+    font-size: 16px;
+    border-bottom: 1px solid #007bff;
+    padding-bottom: 5px;
+}
+
+.footer-section p {
+    line-height: 1.5;
+    margin-bottom: 10px;
+    color: #ccc;
+}
+
+.contato-item {
+    margin-bottom: 10px;
+}
+
+.contato-item .icon {
+    font-size: 16px;
+    margin-right: 8px;
+}
+
+.contato-item span {
+    color: white;
+}
+
+/* Redes Sociais */
+.redes-sociais {
+    margin-top: 15px;
+}
+
+.rede-social {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.rede-social:hover {
+    color: #0056b3;
+}
+
+/* Seção WhatsApp */
+.whatsapp-section {
     text-align: center;
-    padding: 30px 0;
+}
+
+/* Botão WhatsApp */
+.botao-whatsapp {
+    background-color: #25d366;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 15px 0;
+    display: inline-block;
+}
+
+.botao-whatsapp:hover {
+    background-color: #128c7e;
+    color: white;
+}
+
+.icon-whatsapp {
+    font-size: 16px;
+}
+
+.whatsapp-info {
+    font-size: 12px;
+    color: #ccc;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    border-top: 1px solid #555;
+    margin-top: 20px;
+    padding-top: 15px;
+    text-align: center;
+    color: #ccc;
+}
+
+.footer-bottom p {
+    margin: 5px 0;
+    font-size: 12px;
+}
+
+/* Botão de login */
+.botao-login {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.botao-login:hover {
+    background-color: #0056b3;
+}
+
+/* Modal de login */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+}
+
+.modal-header {
+    background-color: #007bff;
+    color: white;
+    padding: 15px 20px;
+    margin: -20px -20px 20px -20px;
+    border-radius: 10px 10px 0 0;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.close {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    float: right;
+}
+
+.close:hover {
+    color: #ccc;
+}
+
+.modal-body {
+    padding: 0;
+}
+
+/* Formulário de login */
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-weight: bold;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.form-options {
+    margin-bottom: 20px;
+}
+
+.checkbox-label {
+    font-size: 14px;
+    color: #666;
+}
+
+.esqueci-senha {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.esqueci-senha:hover {
+    color: #0056b3;
+}
+
+.botao-login-submit {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.botao-login-submit:hover {
+    background-color: #0056b3;
+}
+
+/* Divisor */
+.divider {
+    text-align: center;
+    margin: 20px 0;
+    color: #666;
+}
+
+/* Login social */
+.social-login {
+    margin-bottom: 20px;
+}
+
+.botao-social {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.botao-social:hover {
+    background-color: #f5f5f5;
+}
+
+/* Link de cadastro */
+.cadastro-link {
+    text-align: center;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.cadastro-link p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.cadastro-link a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.cadastro-link a:hover {
+    color: #0056b3;
+}
+
+/* Estilos específicos para o modal de cadastro */
+.close-cadastro {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    float: right;
+}
+
+.close-cadastro:hover {
+    color: #ccc;
 }
 
 /* Responsividade básica */
@@ -436,7 +734,49 @@ footer {
     }
     
     nav {
+        gap: 10px;
+    }
+    
+    nav a {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+    
+    .botao-login {
+        padding: 8px 15px !important;
+        font-size: 14px !important;
+        line-height: inherit !important;
+        height: auto !important;
+    }
+    
+    /* Modal responsivo */
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+        max-width: 400px;
+    }
+    
+    .modal-header {
+        padding: 20px 25px;
+    }
+    
+    .modal-header h2 {
+        font-size: 20px;
+    }
+    
+    .modal-body {
+        padding: 25px;
+    }
+    
+    .form-options {
+        flex-direction: column;
+        align-items: flex-start;
         gap: 15px;
+    }
+    
+    /* Rodapé responsivo */
+    .footer-section {
+        width: 48%;
     }
 }
 
@@ -457,5 +797,56 @@ footer {
     .botao-principal, .botao-secundario {
         display: block;
         margin: 10px 0;
+    }
+    
+    nav {
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    
+    nav a {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .botao-login {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+        line-height: inherit !important;
+        height: auto !important;
+    }
+    
+    /* Modal para dispositivos móveis pequenos */
+    .modal-content {
+        margin: 5% auto;
+        width: 98%;
+        max-width: 350px;
+    }
+    
+    .modal-header {
+        padding: 15px 20px;
+    }
+    
+    .modal-header h2 {
+        font-size: 18px;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .input-group input {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .botao-login-submit {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    /* Rodapé para mobile */
+    .footer-section {
+        width: 100%;
     }
 }
