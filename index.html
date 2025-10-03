@@ -23,7 +23,7 @@
                 <a href="#precos">Preços</a>
                 <a href="#sobre">Sobre</a>
                 <a href="#contato">Contato</a>
-                <a href="#carrinho" class="botao">Carrinho</a>
+                <a href="#carrinho" class="botao">Carrinho <span id="cartCount" class="cart-count">0</span></a>
                 <button id="loginBtn" class="botao-login">Login</button>
             </nav>
         </div>
@@ -107,7 +107,14 @@
         <section id="carrinho" class="carrinho">
             <div class="container-carrinho">
                 <h2>Seu Carrinho</h2>
-                <p>Seu carrinho está vazio. Faça login para adicionar serviços ou visualizar itens.</p>
+                <div id="cartArea">
+                    <p id="cartEmpty" class="cart-empty">Seu carrinho está vazio. Faça login para adicionar serviços ou visualizar itens.</p>
+                    <ul id="cartItems" class="cart-items"></ul>
+                    <div class="cart-actions" id="cartActions">
+                        <button id="clearCart" class="btn-clear">Limpar carrinho</button>
+                        <button id="checkout" class="btn-checkout">Finalizar pedido</button>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -252,6 +259,38 @@
       var serviceAnchors = document.querySelectorAll('a.botao-principal, a.botao, a.botao-secundario');
       for(var i=0;i<serviceAnchors.length;i++){ (function(el){ if(el && el.tagName && el.tagName.toLowerCase()==='a'){ el.onclick = function(e){ if(!usuarioLogado){ e.preventDefault(); abrirLogin(); } }; } })(serviceAnchors[i]); }
     });
+
+    // --- Carrinho simples (persistido em localStorage) ---
+    (function(){
+        var cart = [];
+        var cartCountEl = document.getElementById('cartCount');
+        var cartItemsEl = document.getElementById('cartItems');
+        var cartEmptyEl = document.getElementById('cartEmpty');
+        var cartActionsEl = document.getElementById('cartActions');
+        var clearBtn = document.getElementById('clearCart');
+        var checkoutBtn = document.getElementById('checkout');
+
+        function save(){ localStorage.setItem('laveja_cart', JSON.stringify(cart)); }
+        function load(){ var raw = localStorage.getItem('laveja_cart'); if(raw) cart = JSON.parse(raw); else cart = []; }
+        function updateUI(){
+            if(!cartCountEl) return;
+            cartCountEl.textContent = cart.length;
+            if(cart.length===0){ if(cartItemsEl) cartItemsEl.style.display='none'; if(cartActionsEl) cartActionsEl.style.display='none'; if(cartEmptyEl) cartEmptyEl.style.display='block'; }
+            else { if(cartItemsEl) { cartItemsEl.innerHTML = ''; cart.forEach(function(it,idx){ var li = document.createElement('li'); li.className='cart-item'; var left = document.createElement('div'); left.className='name'; left.textContent = it.name; var right = document.createElement('div'); right.className='price'; right.textContent = it.price; li.appendChild(left); li.appendChild(right); cartItemsEl.appendChild(li); }); cartItemsEl.style.display='block'; } if(cartActionsEl) cartActionsEl.style.display='flex'; if(cartEmptyEl) cartEmptyEl.style.display='none'; }
+        }
+
+        function addItem(item){ cart.push(item); save(); updateUI(); }
+        function clearCart(){ cart = []; save(); updateUI(); }
+
+        // Expor addItem para uso nos botões de serviço
+        window.lavejaAddToCart = function(name, price){ if(!usuarioLogado){ abrirLogin(); return; } addItem({ name: name, price: price }); alert('Item adicionado ao carrinho'); };
+
+        if(clearBtn) clearBtn.onclick = function(){ if(confirm('Limpar carrinho?')) clearCart(); };
+        if(checkoutBtn) checkoutBtn.onclick = function(){ if(!usuarioLogado){ abrirLogin(); return; } alert('Finalizar pedido - funcionalidade de pagamento não implementada.'); };
+
+        // Inicializar
+        load(); updateUI();
+    })();
     </script>
 </body>
 </html>
