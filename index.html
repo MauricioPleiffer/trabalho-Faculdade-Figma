@@ -101,13 +101,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- Seção de contato -->
-        <section id="contato" class="contato">
-            <h2>Contato</h2>
-            <p>Para solicitar serviços ou tirar dúvidas, envie um email para <a href="mailto:contato@laveja.com.br">contato@laveja.com.br</a>.</p>
-        </section>
-
     </main>
 
     <!-- Rodapé (restaurado) -->
@@ -170,7 +163,7 @@
         </div>
     </footer>
 
-    <!-- Modal de Login (única forma de entrar) -->
+    <!-- Modal de Login (restaurado) -->
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -187,61 +180,68 @@
                         <label for="senha">Senha:</label>
                         <input type="password" id="senha" placeholder="Sua senha" required>
                     </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="lembrar"> Lembrar de mim
+                        </label>
+                        <a href="#" class="esqueci-senha">Esqueci minha senha</a>
+                    </div>
                     <button type="submit" class="botao-login-submit">Entrar</button>
                 </form>
+                <div class="divider">
+                    <span>ou</span>
+                </div>
+                <div class="social-login">
+                    <button class="botao-social google">Entrar com Google</button>
+                    <button class="botao-social facebook">Entrar com Facebook</button>
+                </div>
+                <div class="cadastro-link">
+                    <p>Não tem uma conta? <a href="#" id="cadastroLink">Cadastre-se aqui</a></p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-    // código simples: apenas login (sem cadastro separado)
+    // login restaurado (visual e opções sociais);
     var usuarios = [];
     var usuarioLogado = null;
 
-    if (localStorage.getItem('usuarios')) {
-      usuarios = JSON.parse(localStorage.getItem('usuarios'));
-    }
-    if (localStorage.getItem('usuarioLogado')) {
-      usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
-    }
-    if (usuarios.length === 0) {
-      usuarios.push({ id: 1, nome: 'João Silva', email: 'joao@teste.com', senha: '123456' });
-      localStorage.setItem('usuarios', JSON.stringify(usuarios));
-    }
+    if (localStorage.getItem('usuarios')) usuarios = JSON.parse(localStorage.getItem('usuarios'));
+    if (localStorage.getItem('usuarioLogado')) usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+    if (usuarios.length === 0) { usuarios.push({ id: 1, nome: 'João Silva', email: 'joao@teste.com', senha: '123456' }); localStorage.setItem('usuarios', JSON.stringify(usuarios)); }
 
-    function abrirLogin() { var m = document.getElementById('loginModal'); if (m) m.style.display = 'block'; }
-    function fecharLogin() { var m = document.getElementById('loginModal'); if (m) m.style.display = 'none'; }
+    function abrirLogin(){ var m = document.getElementById('loginModal'); if(m) m.style.display = 'block'; }
+    function fecharLogin(){ var m = document.getElementById('loginModal'); if(m) m.style.display = 'none'; }
 
-    function atualizarBotao() {
-      var b = document.getElementById('loginBtn'); if (!b) return;
-      if (usuarioLogado) { b.textContent = 'Olá, ' + usuarioLogado.nome; b.style.backgroundColor = '#28a745'; }
-      else { b.textContent = 'Login'; b.style.backgroundColor = ''; }
-    }
+    function atualizarBotao(){ var b = document.getElementById('loginBtn'); if(!b) return; if(usuarioLogado){ b.textContent = 'Olá, ' + usuarioLogado.nome; b.style.backgroundColor = '#28a745'; } else { b.textContent = 'Login'; b.style.backgroundColor = ''; } }
 
-    function fazerLogin(email, senha) {
-      for (var i = 0; i < usuarios.length; i++) {
-        if (usuarios[i].email === email && usuarios[i].senha === senha) { usuarioLogado = usuarios[i]; localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado)); return true; }
-      }
-      return false;
-    }
+    function fazerLogin(email, senha, lembrar){ for(var i=0;i<usuarios.length;i++){ if(usuarios[i].email===email && usuarios[i].senha===senha){ usuarioLogado = usuarios[i]; if(lembrar){ localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado)); } else { sessionStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado)); } return true; } } return false; }
 
-    function fazerLogout() { usuarioLogado = null; localStorage.removeItem('usuarioLogado'); atualizarBotao(); }
+    function fazerLogout(){ usuarioLogado = null; localStorage.removeItem('usuarioLogado'); sessionStorage.removeItem('usuarioLogado'); atualizarBotao(); }
 
-    window.addEventListener('load', function () {
+    window.addEventListener('load', function(){
+      // se estava em sessionStorage e não em localStorage, restaurar temporariamente
+      if(!usuarioLogado && sessionStorage.getItem('usuarioLogado')){ usuarioLogado = JSON.parse(sessionStorage.getItem('usuarioLogado')); }
       atualizarBotao();
-      var loginBtn = document.getElementById('loginBtn');
-      if (loginBtn) loginBtn.onclick = function () { if (usuarioLogado) { if (confirm('Deseja sair?')) { fazerLogout(); } } else { abrirLogin(); } };
 
-      var closeLogin = document.querySelector('.close'); if (closeLogin) closeLogin.onclick = fecharLogin;
+      var loginBtn = document.getElementById('loginBtn');
+      if(loginBtn) loginBtn.onclick = function(){ if(usuarioLogado){ if(confirm('Deseja sair?')){ fazerLogout(); } } else { abrirLogin(); } };
+
+      var closeLogin = document.querySelector('.close'); if(closeLogin) closeLogin.onclick = fecharLogin;
 
       var formLogin = document.getElementById('loginForm');
-      if (formLogin) formLogin.onsubmit = function (e) { e.preventDefault(); var email = document.getElementById('email').value.trim(); var senha = document.getElementById('senha').value; if (fazerLogin(email, senha)) { alert('Login ok!'); fecharLogin(); atualizarBotao(); formLogin.reset(); } else { alert('Email ou senha errados.'); } };
+      if(formLogin) formLogin.onsubmit = function(e){ e.preventDefault(); var email = document.getElementById('email').value.trim(); var senha = document.getElementById('senha').value; var lembrar = document.getElementById('lembrar') && document.getElementById('lembrar').checked; if(fazerLogin(email, senha, lembrar)){ alert('Login ok!'); fecharLogin(); atualizarBotao(); formLogin.reset(); } else { alert('Email ou senha errados.'); } };
 
-      var servicosLink = document.querySelector('a[href="#servicos"]');
-      if (servicosLink) servicosLink.onclick = function (e) { if (!usuarioLogado) { e.preventDefault(); abrirLogin(); } };
+      var cadastroLink = document.getElementById('cadastroLink'); if(cadastroLink) cadastroLink.onclick = function(e){ e.preventDefault(); alert('Cadastro temporariamente desativado. Entre em contato se precisar.'); };
+
+      var socialGoogle = document.querySelector('.botao-social.google'); if(socialGoogle) socialGoogle.onclick = function(){ alert('Login com Google não implementado aqui.'); };
+      var socialFb = document.querySelector('.botao-social.facebook'); if(socialFb) socialFb.onclick = function(){ alert('Login com Facebook não implementado aqui.'); };
+
+      var servicosLink = document.querySelector('a[href="#servicos"]'); if(servicosLink) servicosLink.onclick = function(e){ if(!usuarioLogado){ e.preventDefault(); abrirLogin(); } };
 
       var serviceAnchors = document.querySelectorAll('a.botao-principal, a.botao, a.botao-secundario');
-      for (var i = 0; i < serviceAnchors.length; i++) { (function(el){ if (el && el.tagName && el.tagName.toLowerCase() === 'a') { el.onclick = function (e) { if (!usuarioLogado) { e.preventDefault(); abrirLogin(); } }; } })(serviceAnchors[i]); }
+      for(var i=0;i<serviceAnchors.length;i++){ (function(el){ if(el && el.tagName && el.tagName.toLowerCase()==='a'){ el.onclick = function(e){ if(!usuarioLogado){ e.preventDefault(); abrirLogin(); } }; } })(serviceAnchors[i]); }
     });
     </script>
 </body>
