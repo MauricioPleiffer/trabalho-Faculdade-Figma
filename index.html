@@ -365,17 +365,14 @@ window.addEventListener('load', function () {
   if (cadastroLink) cadastroLink.addEventListener('click', function (e) { e.preventDefault(); fecharLogin(); abrirCadastro(); });
 
     // Se o usuário clicar em 'Serviços' e não estiver logado, abre cadastro
-    var servicosLink = document.querySelector('a[href="#servicos"]');
-    if (servicosLink) {
-        servicosLink.addEventListener('click', function(e) {
-            // se não estiver logado, pede cadastro
-            if (!usuarioLogado) {
+        var servicosLink = document.querySelector('a[href="#servicos"]');
+        if (servicosLink) {
+            servicosLink.addEventListener('click', function(e) {
+                // abrir sempre o modal de login quando clicar em Serviços
                 e.preventDefault();
-                abrirCadastro();
-            }
-            // se estiver logado, segue normalmente (ancora na página)
-        });
-    }
+                abrirLogin();
+            });
+        }
 
   var formCad = document.getElementById('cadastroForm');
   if (formCad) {
