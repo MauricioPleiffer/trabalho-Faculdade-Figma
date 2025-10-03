@@ -551,6 +551,7 @@ nav a:hover {
     padding: 15px 20px;
     margin: -20px -20px 20px -20px;
     border-radius: 10px 10px 0 0;
+    position: relative; /* permite posicionar o X dentro do cabeçalho */
 }
 
 .modal-header h2 {
@@ -560,7 +561,7 @@ nav a:hover {
 
 .close {
     color: white;
-    font-size: 22px;
+    font-size: 24px;
     font-weight: bold;
     cursor: pointer;
     position: absolute;
@@ -568,6 +569,9 @@ nav a:hover {
     right: 12px;
     background: transparent;
     border: none;
+    padding: 6px 8px; /* área clicável maior */
+    z-index: 9999;
+    line-height: 1;
 }
 
 .close:hover {
@@ -692,7 +696,7 @@ nav a:hover {
 /* Estilos específicos para o modal de cadastro */
 .close-cadastro {
     color: white;
-    font-size: 22px;
+    font-size: 24px;
     font-weight: bold;
     cursor: pointer;
     position: absolute;
@@ -700,6 +704,9 @@ nav a:hover {
     right: 12px;
     background: transparent;
     border: none;
+    padding: 6px 8px;
+    z-index: 9999;
+    line-height: 1;
 }
 
 .close-cadastro:hover {
