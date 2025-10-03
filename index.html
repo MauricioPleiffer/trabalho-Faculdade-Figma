@@ -368,9 +368,12 @@ window.addEventListener('load', function () {
         var servicosLink = document.querySelector('a[href="#servicos"]');
         if (servicosLink) {
             servicosLink.addEventListener('click', function(e) {
-                // abrir sempre o modal de login quando clicar em Serviços
-                e.preventDefault();
-                abrirLogin();
+                // se não estiver logado, abre o modal de login e impede a âncora
+                if (!usuarioLogado) {
+                    e.preventDefault();
+                    abrirLogin();
+                }
+                // se estiver logado, deixa o comportamento padrão (rolar para a seção)
             });
         }
 
