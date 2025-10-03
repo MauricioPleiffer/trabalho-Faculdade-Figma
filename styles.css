@@ -542,6 +542,7 @@ nav a:hover {
     padding: 20px;
     border-radius: 10px;
     width: 400px;
+    position: relative; /* permite posicionar o X com absolute */
 }
 
 .modal-header {
@@ -550,6 +551,7 @@ nav a:hover {
     padding: 15px 20px;
     margin: -20px -20px 20px -20px;
     border-radius: 10px 10px 0 0;
+    position: relative; /* permite posicionar o X dentro do cabeçalho */
 }
 
 .modal-header h2 {
@@ -562,11 +564,18 @@ nav a:hover {
     font-size: 24px;
     font-weight: bold;
     cursor: pointer;
-    float: right;
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    padding: 6px 8px; /* área clicável maior */
+    z-index: 9999;
+    line-height: 1;
 }
 
 .close:hover {
-    color: #ccc;
+    color: #f0f0f0;
 }
 
 .modal-body {
@@ -690,11 +699,18 @@ nav a:hover {
     font-size: 24px;
     font-weight: bold;
     cursor: pointer;
-    float: right;
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    padding: 6px 8px;
+    z-index: 9999;
+    line-height: 1;
 }
 
 .close-cadastro:hover {
-    color: #ccc;
+    color: #f0f0f0;
 }
 
 /* Responsividade básica */

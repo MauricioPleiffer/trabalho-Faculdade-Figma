@@ -101,28 +101,9 @@
                 </div>
             </div>
         </section>
-
-        <!-- Galeria de fotos -->
-        <section class="galeria">
-            <h2>Nossa Lavanderia</h2>
-            <div class="fotos-galeria">
-                <img src="imagem/unnamed (2).png" alt="Instalações da lavanderia">
-                <img src="imagem/unnamed (3).png" alt="Equipamentos profissionais">
-                <img src="imagem/unnamed (4).png" alt="Processo de lavagem">
-            </div>
-        </section>
-
-        <!-- Seção de contato -->
-        <section id="contato" class="contato">
-            <h2>Contato</h2>
-            <form class="formulario-contato">
-                <input type="email" placeholder="Seu email" required>
-                <button class="botao" type="submit">Enviar</button>
-            </form>
-        </section>
     </main>
 
-    <!-- Rodapé -->
+    <!-- Rodapé (restaurado) -->
     <footer class="footer-completo">
         <div class="container-footer">
             <!-- Seção Contato -->
@@ -160,9 +141,9 @@
                 <h3>Sobre a LaveJá</h3>
                 <p>Somos uma lavanderia familiar com mais de 15 anos de experiência no mercado. Nossa missão é cuidar das suas roupas com carinho e profissionalismo.</p>
                 <div class="redes-sociais">
-                    <a href="#" class="rede-social">📘 Facebook</a>
-                    <a href="#" class="rede-social">📷 Instagram</a>
-                    <a href="#" class="rede-social">🐦 Twitter</a>
+                    <a href="#" class="rede-social">Facebook</a>
+                    <a href="#" class="rede-social">Instagram</a>
+                    <a href="#" class="rede-social">Twitter</a>
                 </div>
             </div>
 
@@ -170,12 +151,7 @@
             <div class="footer-section whatsapp-section">
                 <h3>Fale Conosco</h3>
                 <p>Precisa de ajuda? Entre em contato pelo WhatsApp!</p>
-                <a href="https://wa.me/5511999999999?text=Olá! Gostaria de solicitar um serviço da LaveJá" 
-                   target="_blank" 
-                   class="botao-whatsapp">
-                    <i class="icon-whatsapp">💬</i>
-                    WhatsApp
-                </a>
+                <a href="https://wa.me/5511999999999?text=Olá! Gostaria de solicitar um serviço da LaveJá" target="_blank" rel="noopener" class="botao-whatsapp">WhatsApp</a>
                 <p class="whatsapp-info">Resposta rápida em até 5 minutos</p>
             </div>
         </div>
@@ -187,7 +163,7 @@
         </div>
     </footer>
 
-    <!-- Modal de Login -->
+    <!-- Modal de Login (restaurado) -->
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -206,8 +182,7 @@
                     </div>
                     <div class="form-options">
                         <label class="checkbox-label">
-                            <input type="checkbox" id="lembrar">
-                            Lembrar de mim
+                            <input type="checkbox" id="lembrar"> Lembrar de mim
                         </label>
                         <a href="#" class="esqueci-senha">Esqueci minha senha</a>
                     </div>
@@ -217,21 +192,8 @@
                     <span>ou</span>
                 </div>
                 <div class="social-login">
-                    <button class="botao-social google">
-                        <svg width="20" height="20" viewBox="0 0 24 24">
-                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                        </svg>
-                        Entrar com Google
-                    </button>
-                    <button class="botao-social facebook">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
-                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                        </svg>
-                        Entrar com Facebook
-                    </button>
+                    <button class="botao-social google">Entrar com Google</button>
+                    <button class="botao-social facebook">Entrar com Facebook</button>
                 </div>
                 <div class="cadastro-link">
                     <p>Não tem uma conta? <a href="#" id="cadastroLink">Cadastre-se aqui</a></p>
@@ -240,147 +202,47 @@
         </div>
     </div>
 
-    <!-- Modal de Cadastro -->
-    <div id="cadastroModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Criar Conta</h2>
-                <span class="close-cadastro">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="cadastroForm">
-                    <div class="input-group">
-                        <label for="nomeCadastro">Nome completo:</label>
-                        <input type="text" id="nomeCadastro" placeholder="Seu nome completo" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="emailCadastro">Email:</label>
-                        <input type="email" id="emailCadastro" placeholder="seu@email.com" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="senhaCadastro">Senha:</label>
-                        <input type="password" id="senhaCadastro" placeholder="Mínimo 6 caracteres" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="confirmarSenha">Confirmar senha:</label>
-                        <input type="password" id="confirmarSenha" placeholder="Digite a senha novamente" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="telefoneCadastro">Telefone:</label>
-                        <input type="tel" id="telefoneCadastro" placeholder="(11) 99999-9999" required>
-                    </div>
-                    <button type="submit" class="botao-login-submit">Criar Conta</button>
-                </form>
-                <div class="cadastro-link">
-                    <p>Já tem uma conta? <a href="#" id="loginLink">Faça login aqui</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
-// --- Código simplificado e comentado em linguagem simples ---
-var usuarios = [];
-var usuarioLogado = null;
+    // login restaurado (visual e opções sociais);
+    var usuarios = [];
+    var usuarioLogado = null;
 
-// carrega dados do navegador
-if (localStorage.getItem('usuarios')) {
-  usuarios = JSON.parse(localStorage.getItem('usuarios'));
-}
-if (localStorage.getItem('usuarioLogado')) {
-  usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
-}
+    if (localStorage.getItem('usuarios')) usuarios = JSON.parse(localStorage.getItem('usuarios'));
+    if (localStorage.getItem('usuarioLogado')) usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+    if (usuarios.length === 0) { usuarios.push({ id: 1, nome: 'João Silva', email: 'joao@teste.com', senha: '123456' }); localStorage.setItem('usuarios', JSON.stringify(usuarios)); }
 
-// se não tem usuário, cria um de teste
-if (usuarios.length === 0) {
-  usuarios.push({ id: 1, nome: 'João Silva', email: 'joao@teste.com', senha: '123456', telefone: '(11) 99999-9999' });
-  localStorage.setItem('usuarios', JSON.stringify(usuarios));
-}
+    function abrirLogin(){ var m = document.getElementById('loginModal'); if(m) m.style.display = 'block'; }
+    function fecharLogin(){ var m = document.getElementById('loginModal'); if(m) m.style.display = 'none'; }
 
-function abrirLogin() { var m = document.getElementById('loginModal'); if (m) m.style.display = 'block'; }
-function fecharLogin() { var m = document.getElementById('loginModal'); if (m) m.style.display = 'none'; }
-function abrirCadastro() { var m = document.getElementById('cadastroModal'); if (m) m.style.display = 'block'; }
-function fecharCadastro() { var m = document.getElementById('cadastroModal'); if (m) m.style.display = 'none'; }
+    function atualizarBotao(){ var b = document.getElementById('loginBtn'); if(!b) return; if(usuarioLogado){ b.textContent = 'Olá, ' + usuarioLogado.nome; b.style.backgroundColor = '#28a745'; } else { b.textContent = 'Login'; b.style.backgroundColor = ''; } }
 
-function atualizarBotao() {
-  var b = document.getElementById('loginBtn');
-  if (!b) return;
-  if (usuarioLogado) {
-    b.textContent = 'Olá, ' + usuarioLogado.nome;
-    b.style.backgroundColor = '#28a745';
-  } else {
-    b.textContent = 'Login';
-    b.style.backgroundColor = '';
-  }
-}
+    function fazerLogin(email, senha, lembrar){ for(var i=0;i<usuarios.length;i++){ if(usuarios[i].email===email && usuarios[i].senha===senha){ usuarioLogado = usuarios[i]; if(lembrar){ localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado)); } else { sessionStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado)); } return true; } } return false; }
 
-function fazerLogin(email, senha) {
-  for (var i = 0; i < usuarios.length; i++) {
-    if (usuarios[i].email === email && usuarios[i].senha === senha) {
-      usuarioLogado = usuarios[i];
-      localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-      return true;
-    }
-  }
-  return false;
-}
+    function fazerLogout(){ usuarioLogado = null; localStorage.removeItem('usuarioLogado'); sessionStorage.removeItem('usuarioLogado'); atualizarBotao(); }
 
-function fazerLogout() { usuarioLogado = null; localStorage.removeItem('usuarioLogado'); atualizarBotao(); }
+    window.addEventListener('load', function(){
+      // se estava em sessionStorage e não em localStorage, restaurar temporariamente
+      if(!usuarioLogado && sessionStorage.getItem('usuarioLogado')){ usuarioLogado = JSON.parse(sessionStorage.getItem('usuarioLogado')); }
+      atualizarBotao();
 
-function cadastrarUsuario(nome, email, senha, tel) {
-  for (var i = 0; i < usuarios.length; i++) {
-    if (usuarios[i].email === email) return { erro: 'Email ja cadastrado' };
-  }
-  var novo = { id: Date.now(), nome: nome, email: email, senha: senha, telefone: tel };
-  usuarios.push(novo);
-  localStorage.setItem('usuarios', JSON.stringify(usuarios));
-  return { ok: true };
-}
+      var loginBtn = document.getElementById('loginBtn');
+      if(loginBtn) loginBtn.onclick = function(){ if(usuarioLogado){ if(confirm('Deseja sair?')){ fazerLogout(); } } else { abrirLogin(); } };
 
-window.addEventListener('load', function () {
-  atualizarBotao();
-  var loginBtn = document.getElementById('loginBtn');
-  if (loginBtn) {
-    loginBtn.addEventListener('click', function () {
-      if (usuarioLogado) {
-        if (confirm('Deseja sair?')) { fazerLogout(); }
-      } else { abrirLogin(); }
+      var closeLogin = document.querySelector('.close'); if(closeLogin) closeLogin.onclick = fecharLogin;
+
+      var formLogin = document.getElementById('loginForm');
+      if(formLogin) formLogin.onsubmit = function(e){ e.preventDefault(); var email = document.getElementById('email').value.trim(); var senha = document.getElementById('senha').value; var lembrar = document.getElementById('lembrar') && document.getElementById('lembrar').checked; if(fazerLogin(email, senha, lembrar)){ alert('Login ok!'); fecharLogin(); atualizarBotao(); formLogin.reset(); } else { alert('Email ou senha errados.'); } };
+
+      var cadastroLink = document.getElementById('cadastroLink'); if(cadastroLink) cadastroLink.onclick = function(e){ e.preventDefault(); alert('Cadastro temporariamente desativado. Entre em contato se precisar.'); };
+
+      var socialGoogle = document.querySelector('.botao-social.google'); if(socialGoogle) socialGoogle.onclick = function(){ alert('Login com Google não implementado aqui.'); };
+      var socialFb = document.querySelector('.botao-social.facebook'); if(socialFb) socialFb.onclick = function(){ alert('Login com Facebook não implementado aqui.'); };
+
+      var servicosLink = document.querySelector('a[href="#servicos"]'); if(servicosLink) servicosLink.onclick = function(e){ if(!usuarioLogado){ e.preventDefault(); abrirLogin(); } };
+
+      var serviceAnchors = document.querySelectorAll('a.botao-principal, a.botao, a.botao-secundario');
+      for(var i=0;i<serviceAnchors.length;i++){ (function(el){ if(el && el.tagName && el.tagName.toLowerCase()==='a'){ el.onclick = function(e){ if(!usuarioLogado){ e.preventDefault(); abrirLogin(); } }; } })(serviceAnchors[i]); }
     });
-  }
-  var closeLogin = document.querySelector('.close'); if (closeLogin) closeLogin.addEventListener('click', fecharLogin);
-  var closeCad = document.querySelector('.close-cadastro'); if (closeCad) closeCad.addEventListener('click', fecharCadastro);
-
-  var formLogin = document.getElementById('loginForm');
-  if (formLogin) {
-    formLogin.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var email = document.getElementById('email').value.trim();
-      var senha = document.getElementById('senha').value;
-      if (fazerLogin(email, senha)) { alert('Login ok!'); fecharLogin(); atualizarBotao(); formLogin.reset(); }
-      else { alert('Email ou senha errados.'); }
-    });
-  }
-
-  var cadastroLink = document.getElementById('cadastroLink');
-  if (cadastroLink) cadastroLink.addEventListener('click', function (e) { e.preventDefault(); fecharLogin(); abrirCadastro(); });
-
-  var formCad = document.getElementById('cadastroForm');
-  if (formCad) {
-    formCad.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var nome = document.getElementById('nomeCadastro').value.trim();
-      var email = document.getElementById('emailCadastro').value.trim();
-      var senha = document.getElementById('senhaCadastro').value;
-      var conf = document.getElementById('confirmarSenha').value;
-      var tel = document.getElementById('telefoneCadastro').value.trim();
-      if (senha.length < 6) { alert('Senha precisa ter 6 ou mais caracteres'); return; }
-      if (senha !== conf) { alert('As senhas não batem'); return; }
-      var r = cadastrarUsuario(nome, email, senha, tel);
-      if (r.erro) { alert(r.erro); return; }
-      alert('Cadastro feito! Faça login.'); fecharCadastro(); abrirLogin(); formCad.reset();
-    });
-  }
-});
     </script>
 </body>
 </html>
