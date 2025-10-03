@@ -170,7 +170,7 @@
             <div class="footer-section whatsapp-section">
                 <h3>Fale Conosco</h3>
                 <p>Precisa de ajuda? Entre em contato pelo WhatsApp!</p>
-                <a href="https://wa.me/5511999999999?text=Olá! Gostaria de solicitar um serviço da LaveJá" 
+                <a href="https://wa.me/551193588287?text=Olá! Gostaria de solicitar um serviço da LaveJá" 
                    target="_blank" 
                    class="botao-whatsapp">
                     <i class="icon-whatsapp">💬</i>
@@ -376,6 +376,20 @@ window.addEventListener('load', function () {
                 // se estiver logado, deixa o comportamento padrão (rolar para a seção)
             });
         }
+
+            // Garantir que todos os links de "Solicitar"/"Ver Serviços" abram o login se não estiver logado
+            var serviceAnchors = document.querySelectorAll('a.botao-principal, a.botao, a.botao-secundario');
+            serviceAnchors.forEach(function(el) {
+                // apenas anchors (evita afetar botões <button>)
+                if (el && el.tagName && el.tagName.toLowerCase() === 'a') {
+                    el.addEventListener('click', function(e) {
+                        if (!usuarioLogado) {
+                            e.preventDefault();
+                            abrirLogin();
+                        }
+                    });
+                }
+            });
 
   var formCad = document.getElementById('cadastroForm');
   if (formCad) {
