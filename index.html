@@ -297,6 +297,16 @@ if (usuarios.length === 0) {
   localStorage.setItem('usuarios', JSON.stringify(usuarios));
 }
 
+// Debug helpers: report runtime errors and simple runtime logs so we can inspect the live site console
+window.addEventListener('error', function (evt) {
+    try {
+        console.error('Runtime error caught:', evt && evt.message ? evt.message : evt);
+    } catch (e) {
+        // ignore
+    }
+});
+console.log('[site] script loaded, usuarios.length=', usuarios.length, 'usuarioLogado=', usuarioLogado);
+
 function abrirLogin() { var m = document.getElementById('loginModal'); if (m) m.style.display = 'block'; }
 function fecharLogin() { var m = document.getElementById('loginModal'); if (m) m.style.display = 'none'; }
 function abrirCadastro() { var m = document.getElementById('cadastroModal'); if (m) m.style.display = 'block'; }
@@ -338,17 +348,23 @@ function cadastrarUsuario(nome, email, senha, tel) {
 }
 
 window.addEventListener('load', function () {
-  atualizarBotao();
+    try {
+        console.log('[site] window.load - iniciando registro de listeners');
+        atualizarBotao();
+    } catch (e) { console.error('[site] erro ao atualizar botao', e); }
   var loginBtn = document.getElementById('loginBtn');
   if (loginBtn) {
-    loginBtn.addEventListener('click', function () {
-      if (usuarioLogado) {
-        if (confirm('Deseja sair?')) { fazerLogout(); }
-      } else { abrirLogin(); }
-    });
+        loginBtn.addEventListener('click', function () {
+            try {
+                console.log('[site] loginBtn clicked, usuarioLogado=', usuarioLogado);
+                if (usuarioLogado) {
+                    if (confirm('Deseja sair?')) { fazerLogout(); }
+                } else { abrirLogin(); }
+            } catch (e) { console.error('[site] erro no loginBtn handler', e); }
+        });
   }
-  var closeLogin = document.querySelector('.close'); if (closeLogin) closeLogin.addEventListener('click', fecharLogin);
-  var closeCad = document.querySelector('.close-cadastro'); if (closeCad) closeCad.addEventListener('click', fecharCadastro);
+    var closeLogin = document.querySelector('.close'); if (closeLogin) closeLogin.addEventListener('click', fecharLogin);
+    var closeCad = document.querySelector('.close-cadastro'); if (closeCad) closeCad.addEventListener('click', fecharCadastro);
 
   var formLogin = document.getElementById('loginForm');
   if (formLogin) {
@@ -367,28 +383,36 @@ window.addEventListener('load', function () {
     // Se o usuário clicar em 'Serviços' e não estiver logado, abre cadastro
         var servicosLink = document.querySelector('a[href="#servicos"]');
         if (servicosLink) {
-            servicosLink.addEventListener('click', function(e) {
-                // se não estiver logado, abre o modal de login e impede a âncora
-                if (!usuarioLogado) {
-                    e.preventDefault();
-                    abrirLogin();
-                }
-                // se estiver logado, deixa o comportamento padrão (rolar para a seção)
-            });
-        }
+            try {
+                console.log('[site] encontrado servicosLink');
+                servicosLink.addEventListener('click', function(e) {
+                    // se não estiver logado, abre o modal de login e impede a âncora
+                    console.log('[site] servicosLink clicked, usuarioLogado=', usuarioLogado);
+                    if (!usuarioLogado) {
+                        e.preventDefault();
+                        abrirLogin();
+                    }
+                    // se estiver logado, deixa o comportamento padrão (rolar para a seção)
+                });
+            } catch (e) { console.error('[site] erro ao registrar servicosLink', e); }
+        } else { console.log('[site] servicosLink não encontrado'); }
 
             // Garantir que todos os links de "Solicitar"/"Ver Serviços" abram o login se não estiver logado
             var serviceAnchors = document.querySelectorAll('a.botao-principal, a.botao, a.botao-secundario');
+            console.log('[site] serviceAnchors encontrados:', serviceAnchors.length);
             serviceAnchors.forEach(function(el) {
-                // apenas anchors (evita afetar botões <button>)
-                if (el && el.tagName && el.tagName.toLowerCase() === 'a') {
-                    el.addEventListener('click', function(e) {
-                        if (!usuarioLogado) {
-                            e.preventDefault();
-                            abrirLogin();
-                        }
-                    });
-                }
+                try {
+                    // apenas anchors (evita afetar botões <button>)
+                    if (el && el.tagName && el.tagName.toLowerCase() === 'a') {
+                        el.addEventListener('click', function(e) {
+                            console.log('[site] service anchor clicked:', el.href || el.textContent, 'usuarioLogado=', usuarioLogado);
+                            if (!usuarioLogado) {
+                                e.preventDefault();
+                                abrirLogin();
+                            }
+                        });
+                    }
+                } catch (e) { console.error('[site] erro ao registrar serviceAnchor', e); }
             });
 
   var formCad = document.getElementById('cadastroForm');
