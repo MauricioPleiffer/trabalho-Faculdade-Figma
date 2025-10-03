@@ -279,215 +279,108 @@
     </div>
 
     <script>
-        // Variáveis para guardar os dados
-        var usuarios = [];
-        var usuarioLogado = null;
+// --- Código simplificado e comentado em linguagem simples ---
+var usuarios = [];
+var usuarioLogado = null;
 
-        // Carregar dados salvos
-        if (localStorage.getItem('usuarios')) {
-            usuarios = JSON.parse(localStorage.getItem('usuarios'));
-        }
-        if (localStorage.getItem('usuarioLogado')) {
-            usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
-        }
+// carrega dados do navegador
+if (localStorage.getItem('usuarios')) {
+  usuarios = JSON.parse(localStorage.getItem('usuarios'));
+}
+if (localStorage.getItem('usuarioLogado')) {
+  usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+}
 
-        // Criar usuário de teste
-        if (usuarios.length == 0) {
-            usuarios.push({
-                id: 1,
-                nome: 'João Silva',
-                email: 'joao@teste.com',
-                senha: '123456',
-                telefone: '(11) 99999-9999',
-                dataCadastro: new Date().toLocaleDateString()
-            });
-            localStorage.setItem('usuarios', JSON.stringify(usuarios));
-        }
+// se não tem usuário, cria um de teste
+if (usuarios.length === 0) {
+  usuarios.push({ id: 1, nome: 'João Silva', email: 'joao@teste.com', senha: '123456', telefone: '(11) 99999-9999' });
+  localStorage.setItem('usuarios', JSON.stringify(usuarios));
+}
 
-        // Verificar se está logado quando carrega a página
-        window.onload = function() {
-            if (usuarioLogado) {
-                mudarBotaoLogin();
-            }
-        }
+function abrirLogin() { var m = document.getElementById('loginModal'); if (m) m.style.display = 'block'; }
+function fecharLogin() { var m = document.getElementById('loginModal'); if (m) m.style.display = 'none'; }
+function abrirCadastro() { var m = document.getElementById('cadastroModal'); if (m) m.style.display = 'block'; }
+function fecharCadastro() { var m = document.getElementById('cadastroModal'); if (m) m.style.display = 'none'; }
 
-        // Função para mudar o botão de login
-        function mudarBotaoLogin() {
-            var botao = document.getElementById('loginBtn');
-            botao.innerHTML = 'Olá, ' + usuarioLogado.nome;
-            botao.style.backgroundColor = '#28a745';
-        }
+function atualizarBotao() {
+  var b = document.getElementById('loginBtn');
+  if (!b) return;
+  if (usuarioLogado) {
+    b.textContent = 'Olá, ' + usuarioLogado.nome;
+    b.style.backgroundColor = '#28a745';
+  } else {
+    b.textContent = 'Login';
+    b.style.backgroundColor = '';
+  }
+}
 
-        // Função para fazer logout
-        function fazerLogout() {
-            localStorage.removeItem('usuarioLogado');
-            usuarioLogado = null;
-            location.reload();
-        }
+function fazerLogin(email, senha) {
+  for (var i = 0; i < usuarios.length; i++) {
+    if (usuarios[i].email === email && usuarios[i].senha === senha) {
+      usuarioLogado = usuarios[i];
+      localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+      return true;
+    }
+  }
+  return false;
+}
 
-        // Função para verificar se está logado
-        function verificarLogin() {
-            if (usuarioLogado == null) {
-                document.getElementById('loginModal').style.display = 'block';
-                return false;
-            }
-            return true;
-        }
+function fazerLogout() { usuarioLogado = null; localStorage.removeItem('usuarioLogado'); atualizarBotao(); }
 
-        // Botão de login
-        document.getElementById('loginBtn').onclick = function() {
-            if (usuarioLogado) {
-                if (confirm('Deseja fazer logout?')) {
-                    fazerLogout();
-                }
-            } else {
-                document.getElementById('loginModal').style.display = 'block';
-            }
-        }
+function cadastrarUsuario(nome, email, senha, tel) {
+  for (var i = 0; i < usuarios.length; i++) {
+    if (usuarios[i].email === email) return { erro: 'Email ja cadastrado' };
+  }
+  var novo = { id: Date.now(), nome: nome, email: email, senha: senha, telefone: tel };
+  usuarios.push(novo);
+  localStorage.setItem('usuarios', JSON.stringify(usuarios));
+  return { ok: true };
+}
 
-        // Fechar modal
-        document.querySelector('.close').onclick = function() {
-            document.getElementById('loginModal').style.display = 'none';
-        }
+window.addEventListener('load', function () {
+  atualizarBotao();
+  var loginBtn = document.getElementById('loginBtn');
+  if (loginBtn) {
+    loginBtn.addEventListener('click', function () {
+      if (usuarioLogado) {
+        if (confirm('Deseja sair?')) { fazerLogout(); }
+      } else { abrirLogin(); }
+    });
+  }
+  var closeLogin = document.querySelector('.close'); if (closeLogin) closeLogin.addEventListener('click', fecharLogin);
+  var closeCad = document.querySelector('.close-cadastro'); if (closeCad) closeCad.addEventListener('click', fecharCadastro);
 
-        // Fechar modal clicando fora
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('loginModal')) {
-                document.getElementById('loginModal').style.display = 'none';
-            }
-            if (event.target == document.getElementById('cadastroModal')) {
-                document.getElementById('cadastroModal').style.display = 'none';
-            }
-        }
+  var formLogin = document.getElementById('loginForm');
+  if (formLogin) {
+    formLogin.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = document.getElementById('email').value.trim();
+      var senha = document.getElementById('senha').value;
+      if (fazerLogin(email, senha)) { alert('Login ok!'); fecharLogin(); atualizarBotao(); formLogin.reset(); }
+      else { alert('Email ou senha errados.'); }
+    });
+  }
 
-        // Enviar formulário de login
-        document.getElementById('loginForm').onsubmit = function() {
-            var email = document.getElementById('email').value;
-            var senha = document.getElementById('senha').value;
-            
-            // Procurar usuário
-            var encontrou = false;
-            for (var i = 0; i < usuarios.length; i++) {
-                if (usuarios[i].email == email && usuarios[i].senha == senha) {
-                    usuarioLogado = usuarios[i];
-                    localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-                    alert('Login realizado com sucesso!');
-                    document.getElementById('loginModal').style.display = 'none';
-                    mudarBotaoLogin();
-                    document.getElementById('loginForm').reset();
-                    encontrou = true;
-                    break;
-                }
-            }
-            
-            if (!encontrou) {
-                alert('Email ou senha incorretos!');
-            }
-            
-            return false;
-        }
+  var cadastroLink = document.getElementById('cadastroLink');
+  if (cadastroLink) cadastroLink.addEventListener('click', function (e) { e.preventDefault(); fecharLogin(); abrirCadastro(); });
 
-        // Botões sociais
-        document.querySelector('.botao-social.google').onclick = function() {
-            alert('Login com Google (em desenvolvimento)');
-        }
-
-        document.querySelector('.botao-social.facebook').onclick = function() {
-            alert('Login com Facebook (em desenvolvimento)');
-        }
-
-        // Link de cadastro
-        document.getElementById('cadastroLink').onclick = function() {
-            document.getElementById('loginModal').style.display = 'none';
-            document.getElementById('cadastroModal').style.display = 'block';
-            return false;
-        }
-
-        // Link esqueci senha
-        document.querySelector('.esqueci-senha').onclick = function() {
-            alert('Recuperar senha (em desenvolvimento)');
-            return false;
-        }
-
-        // Fechar modal de cadastro
-        document.querySelector('.close-cadastro').onclick = function() {
-            document.getElementById('cadastroModal').style.display = 'none';
-        }
-
-        // Enviar formulário de cadastro
-        document.getElementById('cadastroForm').onsubmit = function() {
-            var nome = document.getElementById('nomeCadastro').value;
-            var email = document.getElementById('emailCadastro').value;
-            var senha = document.getElementById('senhaCadastro').value;
-            var confirmarSenha = document.getElementById('confirmarSenha').value;
-            var telefone = document.getElementById('telefoneCadastro').value;
-
-            // Verificar senha
-            if (senha.length < 6) {
-                alert('A senha deve ter pelo menos 6 caracteres!');
-                return false;
-            }
-
-            if (senha != confirmarSenha) {
-                alert('As senhas não coincidem!');
-                return false;
-            }
-
-            // Verificar se email já existe
-            var emailExiste = false;
-            for (var i = 0; i < usuarios.length; i++) {
-                if (usuarios[i].email == email) {
-                    emailExiste = true;
-                    break;
-                }
-            }
-
-            if (emailExiste) {
-                alert('Este email já está cadastrado!');
-                return false;
-            }
-
-            // Criar novo usuário
-            var novoUsuario = {
-                id: Date.now(),
-                nome: nome,
-                email: email,
-                senha: senha,
-                telefone: telefone,
-                dataCadastro: new Date().toLocaleDateString()
-            };
-
-            usuarios.push(novoUsuario);
-            localStorage.setItem('usuarios', JSON.stringify(usuarios));
-
-            alert('Conta criada com sucesso! Faça login para continuar.');
-            document.getElementById('cadastroModal').style.display = 'none';
-            document.getElementById('loginModal').style.display = 'block';
-            document.getElementById('cadastroForm').reset();
-
-            return false;
-        }
-
-        // Link para voltar ao login
-        document.getElementById('loginLink').onclick = function() {
-            document.getElementById('cadastroModal').style.display = 'none';
-            document.getElementById('loginModal').style.display = 'block';
-            return false;
-        }
-
-        // Verificar login nos botões
-        var botoes = document.querySelectorAll('.botao-principal, .botao');
-        for (var i = 0; i < botoes.length; i++) {
-            if (botoes[i].textContent.indexOf('Solicitar') != -1 || botoes[i].textContent.indexOf('Contato') != -1) {
-                botoes[i].onclick = function(event) {
-                    if (!verificarLogin()) {
-                        event.preventDefault();
-                    } else {
-                        alert('Redirecionando para solicitação...');
-                    }
-                }
-            }
-        }
+  var formCad = document.getElementById('cadastroForm');
+  if (formCad) {
+    formCad.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var nome = document.getElementById('nomeCadastro').value.trim();
+      var email = document.getElementById('emailCadastro').value.trim();
+      var senha = document.getElementById('senhaCadastro').value;
+      var conf = document.getElementById('confirmarSenha').value;
+      var tel = document.getElementById('telefoneCadastro').value.trim();
+      if (senha.length < 6) { alert('Senha precisa ter 6 ou mais caracteres'); return; }
+      if (senha !== conf) { alert('As senhas não batem'); return; }
+      var r = cadastrarUsuario(nome, email, senha, tel);
+      if (r.erro) { alert(r.erro); return; }
+      alert('Cadastro feito! Faça login.'); fecharCadastro(); abrirLogin(); formCad.reset();
+    });
+  }
+});
     </script>
 </body>
 </html>
