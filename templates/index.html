@@ -1,3 +1,4 @@
+<!-- ...existing code... -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lave Já - Lavanderia</title>
     <!-- CSS do projeto -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     <!-- Estilos inline para algumas coisas -->
     <style>
         /* Estilos básicos */
@@ -16,7 +18,7 @@
     <header>
         <div class="header">
             <div class="logo">
-                <img src="imagem/lave.ja.png" alt="Logo Lave Já" width="60" style="border-radius: 5px;">
+                <img src="{{ url_for('static', filename='imagem/lave.ja.png') }}" alt="Logo Lave Já" width="60" style="border-radius: 5px;">
             </div>
             <nav>
                 <a href="#servicos">Serviços</a>
@@ -42,7 +44,7 @@
                     </div>
                 </div>
                 <div class="imagem-principal">
-                    <img src="imagem/lavanderia.jpg" alt="Lavanderia Lave Já">
+                    <img src="{{ url_for('static', filename='imagem/lavanderia.jpg') }}" alt="Lavanderia Lave Já">
                 </div>
             </div>
         </section>
@@ -51,17 +53,17 @@
         <section id="servicos">
             <div class="servicos">
                 <div class="servico">
-                    <img src="imagem/imagem2.jpg" alt="Lavagem de roupas">
+                    <img src="{{ url_for('static', filename='imagem/imagem2.jpg') }}" alt="Lavagem de roupas">
                     <h3>Lavagem Profissional</h3>
                     <p>Roupas limpas e higienizadas com produtos de qualidade.</p>
                 </div>
                 <div class="servico">
-                    <img src="imagem/roup.passad.avif" alt="Passadoria de roupas">
+                    <img src="{{ url_for('static', filename='imagem/roup.passad.avif') }}" alt="Passadoria de roupas">
                     <h3>Passadoria Completa</h3>
                     <p>Roupas passadas e dobradas com cuidado e perfeição.</p>
                 </div>
                 <div class="servico">
-                    <img src="imagem/unnamed.png" alt="Serviços de lavanderia">
+                    <img src="{{ url_for('static', filename='imagem/unnamed.png') }}" alt="Serviços de lavanderia">
                     <h3>Entrega Rápida</h3>
                     <p>Coleta e entrega no prazo combinado, sempre pontual.</p>
                 </div>
@@ -74,17 +76,20 @@
                 <div class="card-preco">
                     <h4>Lavagem Simples</h4>
                     <p class="preco">R$15<span>/kg</span></p>
-                    <a href="#contato" class="botao">Solicitar</a>
+                    <form action="{{ url_for('adiciona_ao_carrinho', servico_id=1) }}" method="get">
+                    <a href="#contato" onclick="this.closest('form').submit(); return false" class="botao">Solicitar</a>
                 </div>
                 <div class="card-preco destaque">
                     <h4>Lavagem + Passadoria</h4>
                     <p class="preco">R$25<span>/kg</span></p>
-                    <a href="#contato" class="botao">Solicitar</a>
+                    <form action="{{ url_for('adiciona_ao_carrinho', servico_id=2) }}" method="get">
+                    <a href="#contato" onclick="this.closest('form').submit(); return false;" class="botao">Solicitar</a>
                 </div>
                 <div class="card-preco">
                     <h4>Serviço Completo</h4>
                     <p class="preco">Sob consulta</p>
-                    <a href="#contato" class="botao-secundario">Contato</a>
+                    <form action="{{ url_for('adiciona_ao_carrinho', servico_id=3) }}" method="get">
+                    <a href="#contato" onclick="this.closest('form').submit(); return false;" class="botao-secundario">Contato</a>
                 </div>
             </div>
         </section>
@@ -98,7 +103,7 @@
                     <p>Com anos de experiência no mercado, garantimos qualidade, pontualidade e satisfação total em cada serviço prestado.</p>
                 </div>
                 <div class="imagem-sobre">
-                    <img src="imagem/unnamed (1).png" alt="Sobre a Lave Já">
+                    <img src="{{ url_for('static', filename='imagem/unnamed (1).png') }}" alt="Sobre a Lave Já">
                 </div>
             </div>
         </section>
@@ -219,7 +224,7 @@
     </div>
 
     <script>
-    // login restaurado (visual e opções sociais);
+    // ...existing code...
     var usuarios = [];
     var usuarioLogado = null;
 
