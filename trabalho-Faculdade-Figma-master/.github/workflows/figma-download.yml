@@ -1,0 +1,36 @@
+name: Download Figma node
+
+on:
+  workflow_dispatch:
+    inputs:
+      file_key:
+        description: 'Figma file key (overrides secret)'
+        required: false
+      node_id:
+        description: 'Figma node id (overrides secret)'
+        required: false
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download node from Figma
+        env:
+          FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+          FIGMA_FILE_KEY: ${{ github.event.inputs.file_key || secrets.FIGMA_FILE_KEY }}
+          FIGMA_NODE_ID: ${{ github.event.inputs.node_id || secrets.FIGMA_NODE_ID }}
+        run: |
+          apt-get update && apt-get install -y curl
+          mkdir -p out
+          curl -s -H "X-Figma-Token: $FIGMA_TOKEN" "https://api.figma.com/v1/images/$FIGMA_FILE_KEY?ids=$FIGMA_NODE_ID&format=png&scale=2" | jq -r '.images["'"$FIGMA_NODE_ID"'" ]' > /tmp/figma_url
+          URL=$(cat /tmp/figma_url)
+          curl -sL "$URL" -o out/figma-node.png
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: figma-node
+          path: out/figma-node.png
