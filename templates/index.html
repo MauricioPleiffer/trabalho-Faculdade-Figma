@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lave Já - Lavanderia</title>
+    <!-- CSS do projeto -->
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Estilos inline para algumas coisas -->
+    <style>
+        /* Estilos básicos */
+    </style>
+    <!-- SDK opcional do Google para visualização do botão -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <!-- Cabeçalho do site -->
+    <header>
+        <div class="header">
+                <div class="logo">
+                <img src="{{ url_for('static', filename='imagem/lave.ja.png') }}" alt="Logo Lave Já" width="60" style="border-radius: 5px;">
+            </div>
+            <nav>
+                <a href="#servicos">Serviços</a>
+                <a href="#precos">Preços</a>
+                <a href="#sobre">Sobre</a>
+                <a href="#contato">Contato</a>
+                <a href="#carrinho" class="botao">Carrinho <span id="cartCount" class="cart-count">0</span></a>
+                <button id="loginBtn" class="botao-login">Login</button>
+                {% if session.usuario %}
+    <p class="user-info">
+        Bem-vindo, {{ session.usuario.nome }}
+        {% if session.usuario.tipo_login == 'google' %}
+            <span style="color: #4285F4;">(Google)</span>
+        {% endif %}
+    </p>
+{% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <!-- Seção principal -->
+    <main>
+        <section class="principal">
+            <div class="conteudo-principal">
+                <div class="texto-principal">
+                    <h1>Lave Já - Sua Lavanderia de Confiança</h1>
+                    <p>Serviços profissionais de lavagem, passadoria e entrega. Cuide das suas roupas com quem entende do assunto.</p>
+                    <div class="botoes">
+                        <a href="#contato" class="botao-principal">Solicitar Serviço</a>
+                        <a href="#servicos" class="botao-secundario">Ver Serviços</a>
+                    </div>
+                </div>
+                <div class="imagem-principal">
+                    <img src="{{ url_for('static', filename='imagem/lavanderia.jpg') }}" alt="Lavanderia Lave Já">
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de serviços -->
+        <section id="servicos">
+            <div class="servicos">
+                <div class="servico">
+                    <img src="{{ url_for('static', filename='imagem/imagem2.jpg') }}" alt="Lavagem de roupas">
+                    <h3>Lavagem Profissional</h3>
+                    <p>Roupas limpas e higienizadas com produtos de qualidade.</p>
+                </div>
+                <div class="servico">
+                    <img src="{{ url_for('static', filename='imagem/roup.passad.avif') }}" alt="Passadoria de roupas">
+                    <h3>Passadoria Completa</h3>
+                    <p>Roupas passadas e dobradas com cuidado e perfeição.</p>
+                </div>
+                <div class="servico">
+                    <img src="{{ url_for('static', filename='imagem/unnamed.png') }}" alt="Serviços de lavanderia">
+                    <h3>Entrega Rápida</h3>
+                    <p>Coleta e entrega no prazo combinado, sempre pontual.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de preços -->
+        <section id="precos" class="precos">
+            <div class="cards-precos">
+                <div class="card-preco">
+                    <h4>Lavagem Simples</h4>
+                    <p class="preco">R$15<span>/kg</span></p>
+                    <a href="#carrinho" class="botao" onclick="lavejaAddToCart(1, 'Lavagem Simples', 15.00)">Solicitar</a>
+                </div>
+                <div class="card-preco destaque">
+                    <h4>Lavagem + Passadoria</h4>
+                    <p class="preco">R$25<span>/kg</span></p>
+                    <a href="#carrinho" class="botao" onclick="lavejaAddToCart(2, 'Lavagem + Passadoria', 25.00)">Solicitar</a>
+                </div>
+                <div class="card-preco">
+                    <h4>Serviço Completo</h4>
+                    <p class="preco">Sob consulta</p>
+                    <a href="#contato" class="botao-secundario">Contato</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção sobre -->
+        <section id="sobre">
+            <div class="sobre">
+                <div class="texto-sobre">
+                    <h2>Sobre a Lave Já</h2>
+                    <p>Somos uma lavanderia moderna e confiável, especializada em cuidar das suas roupas com carinho e profissionalismo. Oferecemos serviços completos de lavagem, passadoria e entrega, sempre pensando na comodidade dos nossos clientes.</p>
+                    <p>Com anos de experiência no mercado, garantimos qualidade, pontualidade e satisfação total em cada serviço prestado.</p>
+                </div>
+                <div class="imagem-sobre">
+                    <img src="{{ url_for('static', filename='imagem/unnamed (1).png') }}" alt="Sobre a Lave Já">
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Carrinho (placeholder) -->
+        <section id="carrinho" class="carrinho">
+            <div class="container-carrinho">
+                <h2>Seu Carrinho</h2>
+                <div id="cartArea">
+                    {% if carrinho %}
+                        <p>{{ carrinho[0].nome }} - R$ {{ carrinho[0].preco }}</p>
+                        <p><strong>Total: R$ {{ total }}</strong></p>
+                    {% else %} 
+                        <p id="cartEmpty" class="cart-empty">Seu carrinho está vazio. Faça login para adicionar serviços ou visualizar itens.</p>
+                    {% endif %}
+                    <ul id="cartItems" class="cart-items" style="display: none;"></ul>
+                    <div class="cart-actions" id="cartActions">
+                        <button id="clearCart" class="btn-clear">Limpar carrinho</button>
+                        <button id="checkout" class="btn-checkout">Finalizar pedido</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Rodapé (restaurado) -->
+    <footer class="footer-completo">
+        <div class="container-footer">
+            <!-- Seção Contato -->
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <div class="contato-item">
+                    <i class="icon">📞</i>
+                    <span>(11) 99999-9999</span>
+                </div>
+                <div class="contato-item">
+                    <i class="icon">📧</i>
+                    <span>contato@laveja.com.br</span>
+                </div>
+                <div class="contato-item">
+                    <i class="icon">🕒</i>
+                    <span>Seg - Sex: 8h às 18h<br>Sáb: 8h às 12h</span>
+                </div>
+            </div>
+
+            <!-- Seção Localização -->
+            <div class="footer-section">
+                <h3>Localização</h3>
+                <div class="contato-item">
+                    <i class="icon">📍</i>
+                    <span>Rua das Lavanderias, 123<br>Centro - São Paulo/SP<br>CEP: 01234-567</span>
+                </div>
+                <div class="contato-item">
+                    <i class="icon">🚗</i>
+                    <span>Estacionamento gratuito<br>para clientes</span>
+                </div>
+            </div>
+
+            <!-- Seção Sobre -->
+            <div class="footer-section">
+                <h3>Sobre a LaveJá</h3>
+                <p>Somos uma lavanderia familiar com mais de 15 anos de experiência no mercado. Nossa missão é cuidar das suas roupas com carinho e profissionalismo.</p>
+                <div class="redes-sociais">
+                    <a href="#" class="rede-social">Facebook</a>
+                    <a href="#" class="rede-social">Instagram</a>
+                    <a href="#" class="rede-social">Twitter</a>
+                </div>
+            </div>
+
+            <!-- Seção WhatsApp -->
+            <div class="footer-section whatsapp-section">
+                <h3>Fale Conosco</h3>
+                <p>Precisa de ajuda? Entre em contato pelo WhatsApp!</p>
+                <a href="https://wa.me/5511999999999?text=Olá! Gostaria de solicitar um serviço da LaveJá" target="_blank" rel="noopener" class="botao-whatsapp">WhatsApp</a>
+                <p class="whatsapp-info">Resposta rápida em até 5 minutos</p>
+            </div>
+        </div>
+
+        <!-- Linha de copyright -->
+        <div class="footer-bottom">
+            <p>© 2025 LaveJá - Lavanderia Profissional. Todos os direitos reservados.</p>
+            <p>Desenvolvido com ❤️ para cuidar das suas roupas</p>
+        </div>
+    </footer>
+
+    <!-- Modal de Login (restaurado) -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Entrar na sua conta</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" placeholder="seu@email.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="senha">Senha:</label>
+                        <input type="password" id="senha" placeholder="Sua senha" required>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="lembrar"> Lembrar de mim
+                        </label>
+                        <a href="#" class="esqueci-senha">Esqueci minha senha</a>
+                    </div>
+                    <button type="submit" class="botao-login-submit">Entrar</button>
+                </form>
+                <div class="divider">
+                    <span>ou</span>
+                </div>
+                <div class="social-login">
+    <a href="/google_login" class="botao-social google" id="googleLoginBtn">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+             alt="Google" width="20" style="vertical-align: middle; margin-right: 8px;">
+        Entrar com Google
+    </a>
+    <button class="botao-social facebook">Entrar com Facebook</button>
+</div>
+                <div class="cadastro-link">
+                    <p>Não tem uma conta? <a href="#" id="cadastroLink">Cadastre-se aqui</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /*
+    // login restaurado (visual e opções sociais);
+    var usuarios = [];
+    var usuarioLogado = null;
+
+    if (localStorage.getItem('usuarios')) usuarios = JSON.parse(localStorage.getItem('usuarios'));
+    if (localStorage.getItem('usuarioLogado')) usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+    if (usuarios.length === 0) { usuarios.push({ id: 1, nome: 'João Silva', email: 'joao@teste.com', senha: '123456' }); localStorage.setItem('usuarios', JSON.stringify(usuarios)); }
+
+    function abrirLogin(){ var m = document.getElementById('loginModal'); if(m) m.style.display = 'block'; }
+    function fecharLogin(){ var m = document.getElementById('loginModal'); if(m) m.style.display = 'none'; }
+
+    function atualizarBotao(){ var b = document.getElementById('loginBtn'); if(!b) return; if(usuarioLogado){ b.textContent = 'Olá, ' + usuarioLogado.nome; b.style.backgroundColor = '#28a745'; } else { b.textContent = 'Login'; b.style.backgroundColor = ''; } }
+
+    /**
+     * Função para realizar a verificação e autenticação do login do usuário
+     * @param {string} email - Email do usuário
+     * @param {string} senha - Senha do usuário
+     * @param {boolean} lembrar - Se true, mantém o login mesmo após fechar o navegador
+     * @returns {boolean} Retorna true se o login for bem sucedido, false caso contrário
+     */
+    //function fazerLogin(email, senha, lembrar){
+        // Percorre a lista de usuários cadastrados
+       // for(var i=0;i<usuarios.length;i++){
+            // Verifica se email e senha correspondem a um usuário válido
+         //   if(usuarios[i].email===email && usuarios[i].senha===senha){
+                // Armazena o usuário logado na variável global
+            //    usuarioLogado = usuarios[i];
+                // Se a opção "lembrar" estiver marcada, salva no localStorage (persiste mesmo após fechar o navegador)
+           //     if(lembrar){
+             //       localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+             //   } else {
+                    // Caso contrário, salva no sessionStorage (persiste apenas durante a sessão)
+             //       sessionStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+              //  }
+              //  return true; // Login bem sucedido
+           // }
+        //}
+    //    return false; // Usuário não encontrado ou senha incorreta
+    //}
+
+    //function fazerLogout(){ usuarioLogado = null; localStorage.removeItem('usuarioLogado'); sessionStorage.removeItem('usuarioLogado'); atualizarBotao(); }
+
+    window.addEventListener('load', function(){
+      // se estava em sessionStorage e não em localStorage, restaurar temporariamente
+      if(!usuarioLogado && sessionStorage.getItem('usuarioLogado')){ usuarioLogado = JSON.parse(sessionStorage.getItem('usuarioLogado')); }
+      atualizarBotao();
+
+      var loginBtn = document.getElementById('loginBtn');
+      if(loginBtn) loginBtn.onclick = function(){ if(usuarioLogado){ if(confirm('Deseja sair?')){ fazerLogout(); } } else { abrirLogin(); } };
+
+      var closeLogin = document.querySelector('.close'); if(closeLogin) closeLogin.onclick = fecharLogin;
+
+      var formLogin = document.getElementById('loginForm');
+      if(formLogin) formLogin.onsubmit = function(e){ e.preventDefault(); var email = document.getElementById('email').value.trim(); var senha = document.getElementById('senha').value; var lembrar = document.getElementById('lembrar') && document.getElementById('lembrar').checked; if(fazerLogin(email, senha, lembrar)){ alert('Login ok!'); fecharLogin(); atualizarBotao(); formLogin.reset(); } else { alert('Email ou senha errados.'); } };
+
+      var cadastroLink = document.getElementById('cadastroLink'); if(cadastroLink) cadastroLink.onclick = function(e){ e.preventDefault(); alert('Cadastro temporariamente desativado. Entre em contato se precisar.'); };
+
+      var socialGoogle = document.querySelector('.botao-social.google');
+if (socialGoogle) {
+    socialGoogle.onclick = function () {
+        // Redireciona para o endpoint Flask que inicia o OAuth
+        window.location.href = '/google_login';
+    };
+}
+      var socialFb = document.querySelector('.botao-social.facebook'); if(socialFb) socialFb.onclick = function(){ alert('Login com Facebook não implementado aqui.'); };
+
+      var servicosLink = document.querySelector('a[href="#servicos"]'); if(servicosLink) servicosLink.onclick = function(e){ if(!usuarioLogado){ e.preventDefault(); abrirLogin(); } };
+
+      var serviceAnchors = document.querySelectorAll('a.botao-principal, a.botao, a.botao-secundario');
+      for(var i=0;i<serviceAnchors.length;i++){ (function(el){ if(el && el.tagName && el.tagName.toLowerCase()==='a'){ el.onclick = function(e){ if(!usuarioLogado){ e.preventDefault(); abrirLogin(); } }; } })(serviceAnchors[i]); }
+    });
+
+    // --- Carrinho simples (persistido em localStorage) ---
+    (function(){
+        var cart = [];
+        var cartCountEl = document.getElementById('cartCount');
+        var cartItemsEl = document.getElementById('cartItems');
+        var cartEmptyEl = document.getElementById('cartEmpty');
+        var cartActionsEl = document.getElementById('cartActions');
+        var clearBtn = document.getElementById('clearCart');
+        var checkoutBtn = document.getElementById('checkout');
+
+        function save(){ localStorage.setItem('laveja_cart', JSON.stringify(cart)); }
+        function load(){ var raw = localStorage.getItem('laveja_cart'); if(raw) cart = JSON.parse(raw); else cart = []; }
+
+        function updateUI(){
+            if(!cartCountEl) return;
+            cartCountEl.textContent = cart.length;
+            if(cart.length===0){
+                if(cartItemsEl) cartItemsEl.style.display='none';
+                if(cartActionsEl) cartActionsEl.style.display='none';
+                if(cartEmptyEl) { cartEmptyEl.style.display='block'; cartEmptyEl.textContent = 'Seu carrinho está vazio.'; }
+            } else {
+                if(cartItemsEl) {
+                    cartItemsEl.innerHTML = '';
+                    cart.forEach(function(it,idx){
+                        var li = document.createElement('li');
+                        li.className='cart-item';
+                        var left = document.createElement('div'); left.className='name'; left.textContent = it.name;
+                        var right = document.createElement('div'); right.className='price';
+                        // Formatar preço como moeda
+                        var priceNum = Number(it.price) || 0;
+                        right.textContent = 'R$ ' + priceNum.toFixed(2).replace('.', ',');
+                        li.appendChild(left); li.appendChild(right); cartItemsEl.appendChild(li);
+                    });
+                    cartItemsEl.style.display='block';
+                }
+                if(cartActionsEl) cartActionsEl.style.display='flex';
+                if(cartEmptyEl) cartEmptyEl.style.display='none';
+            }
+        }
+
+        function addItem(item){ cart.push(item); save(); updateUI(); }
+        function clearCart(){ cart = []; save(); updateUI(); }
+
+        function scapeHtml(str){
+            return String(str).replace(/[&<>"'`=\/]/g, function(s){
+                return ({'&':'&amp;',
+                        '<':'&lt;',
+                        '>':'&gt;',
+                        '"':'&quot;',
+                        "'":"&#39;",
+                        "/":"&#47;",
+                        "=":"&#61;",
+                        "`":"&#96;"}
+                    [s]);
+            });
+        }
+
+        function adicionar(servico_id) {
+            // Chama o endpoint Flask que adiciona o serviço à sessão no servidor
+            fetch('/adicionar_ao_carrinho', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'servico_id=' + encodeURIComponent(servico_id)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.sucesso) {
+                    // Atualiza a área do carrinho com os dados retornados
+                    const carrinhoDiv = document.getElementById('carrinho');
+                    if(carrinhoDiv){
+                        carrinhoDiv.innerHTML = `
+                            <p>${data.nome} - R$ ${Number(data.preco).toFixed(2)}</p>
+                            <p><strong>Total: R$ ${Number(data.total).toFixed(2)}</strong></p>
+                        `;
+                    }
+                } else {
+                    alert('Erro: ' + (data.mensagem || 'Não foi possível adicionar o serviço'));
+                }
+            })
+            .catch(err => {
+                console.error('Erro ao adicionar:', err);
+                alert('Erro de conexão ao adicionar ao carrinho.');
+            });
+        }
+
+        // Expor addItem para uso nos botões de serviço
+        // Agora substitui o carrinho pelo último serviço solicitado (comportamento pedido)
+        window.lavejaAddToCart = function(id, name, price){
+            // Normalizar o preço para número
+            var p = Number(price) || 0;
+            // Substitui o carrinho atual pelo novo item solicitado
+            cart = [{ id: id, name: name, price: p }];
+            // Persiste e atualiza a interface
+            save();
+            updateUI();
+            // Mensagem curta ao usuário
+            alert('Serviço solicitado: ' + name + ' — R$ ' + p.toFixed(2).replace('.', ','));
+        };
+
+        if(clearBtn) clearBtn.onclick = function(){ if(confirm('Limpar carrinho?')) clearCart(); };
+        if(checkoutBtn) checkoutBtn.onclick = function(){
+            if(cart.length === 0){ alert('Carrinho vazio!'); return; }
+            // Chamar o endpoint Flask que finaliza a compra
+            fetch('/finalizar_compra', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json'},
+                body: JSON.stringify({ cart: cart })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.sucesso){
+                    alert(data.mensagem);
+                    clearCart();
+                } else {
+                    alert('Erro ao finalizar compra: ' + (data.mensagem || 'Erro desconhecido'));
+                }
+            })
+            .catch(err => alert('Erro de conexão: ' + err));
+        };
+
+        // Inicializar
+        load(); updateUI();
+    })();
+    </script>
+</body>
+</html>
