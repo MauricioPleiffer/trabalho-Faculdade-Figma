@@ -4,6 +4,7 @@ import carrinho
 import os
 from flask_dance.contrib.google import make_google_blueprint, google
 
+
 # Caminhos para templates e arquivos estáticos
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
 static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static'))
