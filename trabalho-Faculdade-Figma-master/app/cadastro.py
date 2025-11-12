@@ -1,13 +1,14 @@
-from flask import Blueprint, request, jsonify, render_template, session
+from flask import Blueprint, request, jsonify, render_template, session, redirect, url_for
 import json, hashlib, os
-from flask import redirect, url_for
 
 # Criar o Blueprint para cadastro
 cadastro_bp = Blueprint('cadastro', __name__, template_folder='../templates', url_prefix='/auth')
 
-
 USERS_FILE = 'usuarios.json'
 
+# -----------------------------
+# Funções auxiliares
+# -----------------------------
 def carregar_usuarios():
     if os.path.exists(USERS_FILE):
         with open(USERS_FILE, 'r') as f:
@@ -24,7 +25,10 @@ def salvar_usuarios(usuarios):
 def hash_senha(senha):
     return hashlib.sha256(senha.encode()).hexdigest()
 
+# -----------------------------
 # Rotas do Blueprint
+# -----------------------------
+
 @cadastro_bp.route('/cadastro', methods=['POST'])
 def cadastro():
     data = request.get_json()
@@ -43,7 +47,12 @@ def cadastro():
     salvar_usuarios(usuarios)
 
     # Login automático após cadastro
-    session['usuario'] = username
+    session['usuario'] = {
+        "nome": username,
+        "email": username,
+        "tipo_login": "local"
+    }
+
     return jsonify({'ok': True, 'msg': 'Cadastro realizado com sucesso!'})
 
 @cadastro_bp.route('/login', methods=['POST'])
@@ -58,7 +67,11 @@ def login():
         return jsonify({'ok': False, 'msg': 'Usuário não encontrado.'})
 
     if usuarios[username] == hash_senha(senha):
-        session['usuario'] = username
+        session['usuario'] = {
+            "nome": username,
+            "email": username,
+            "tipo_login": "local"
+        }
         return jsonify({'ok': True, 'msg': 'Login bem-sucedido!'})
     else:
         return jsonify({'ok': False, 'msg': 'Senha incorreta.'})
@@ -73,3 +86,4 @@ def usuario_logado():
 def logout():
     session.pop('usuario', None)
     return jsonify({'ok': True, 'msg': 'Logout realizado com sucesso.'})
+

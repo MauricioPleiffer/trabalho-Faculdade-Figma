@@ -11,6 +11,8 @@
     <style>
         /* Estilos básicos */
     </style>
+    <!-- SDK opcional do Google para visualização do botão -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <!-- Cabeçalho do site -->
@@ -26,6 +28,14 @@
                 <a href="#contato">Contato</a>
                 <a href="#carrinho" class="botao">Carrinho <span id="cartCount" class="cart-count">0</span></a>
                 <button id="loginBtn" class="botao-login">Login</button>
+                {% if session.usuario %}
+    <p class="user-info">
+        Bem-vindo, {{ session.usuario.nome }}
+        {% if session.usuario.tipo_login == 'google' %}
+            <span style="color: #4285F4;">(Google)</span>
+        {% endif %}
+    </p>
+{% endif %}
             </nav>
         </div>
     </header>
@@ -214,9 +224,13 @@
                     <span>ou</span>
                 </div>
                 <div class="social-login">
-                    <button class="botao-social google">Entrar com Google</button>
-                    <button class="botao-social facebook">Entrar com Facebook</button>
-                </div>
+    <a href="/google_login" class="botao-social google" id="googleLoginBtn">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+             alt="Google" width="20" style="vertical-align: middle; margin-right: 8px;">
+        Entrar com Google
+    </a>
+    <button class="botao-social facebook">Entrar com Facebook</button>
+</div>
                 <div class="cadastro-link">
                     <p>Não tem uma conta? <a href="#" id="cadastroLink">Cadastre-se aqui</a></p>
                 </div>
@@ -283,7 +297,13 @@
 
       var cadastroLink = document.getElementById('cadastroLink'); if(cadastroLink) cadastroLink.onclick = function(e){ e.preventDefault(); alert('Cadastro temporariamente desativado. Entre em contato se precisar.'); };
 
-      var socialGoogle = document.querySelector('.botao-social.google'); if(socialGoogle) socialGoogle.onclick = function(){ alert('Login com Google não implementado aqui.'); };
+      var socialGoogle = document.querySelector('.botao-social.google');
+if (socialGoogle) {
+    socialGoogle.onclick = function () {
+        // Redireciona para o endpoint Flask que inicia o OAuth
+        window.location.href = '/google_login';
+    };
+}
       var socialFb = document.querySelector('.botao-social.facebook'); if(socialFb) socialFb.onclick = function(){ alert('Login com Facebook não implementado aqui.'); };
 
       var servicosLink = document.querySelector('a[href="#servicos"]'); if(servicosLink) servicosLink.onclick = function(e){ if(!usuarioLogado){ e.preventDefault(); abrirLogin(); } };
