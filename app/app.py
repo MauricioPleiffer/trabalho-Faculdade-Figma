@@ -71,6 +71,10 @@ def index():
                            total=total,
                            usuario=usuario)
 
+@app.route('/cadastro')
+def cadastro_page():
+    return render_template('cadastro.html')
+
 # ---------------------------
 # LOGOUT
 # ---------------------------
