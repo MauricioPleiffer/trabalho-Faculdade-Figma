@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="cadastro.css" media="screen">
+    <title>Criar conta</title>
+</head>
+<body>
+    <main id="form_container">
+
+    <div id="form_header">
+       <h1 id="form_title">Criar conta</h1>
+    </div>
+
+    <form action="cadastro.py" method="post" id="form-cadastro">
+
+    <div class="input-group">
+        <label for="nome">Nome:</label>
+        <input type="text" name="nome" id="nome" 
+        placeholder="Seu nome" 
+        pattern="[A-Za-zÀ-ú ]+" 
+        title="Digite apenas letras (com ou sem acentos)." required> 
+    </div>
+
+    <div class="input-group">
+        <label for="sobrenome">Sobrenome:</label> 
+        <input type="text" name="sobrenome" id="sobrenome" 
+        placeholder="Seu sobrenome" 
+        pattern="[A-Za-zÀ-ú ]+" 
+        title="Digite apenas letras (com ou sem acentos)." required>
+    </div>
+
+    <div class="input-group">
+        <label for="cpf">CPF:</label>
+        <input type="text" name="cpf" id="cpf" 
+        placeholder="000.000.000-00" 
+        inputmode="numeric"  
+        maxlength="14" 
+        title="Digite os 11 números do seu CPF, sem pontos ou traços." required>
+    </div>
+
+    <div class="input-group">
+        <label for="telefone">Telefone:</label> 
+        <input type="tel" name="telefone" id="telefone" 
+        placeholder="(00)00000-0000"
+        inputmode="numeric" 
+        maxlength="15" 
+        title="Digite seu telefone com DDD, sem parênteses (10 ou 11 números)." required>
+    </div>
+
+    <div class="input-group">
+        <label for="email">E-mail:</label> 
+        <input type="email" name="email" id="email" 
+        placeholder="seuemail@dominio.com" required>
+    </div>
+
+    <div class="input-group">
+        <label for="senha">Senha:</label> 
+        <input type="password" name="senha" id="senha" 
+        minlength="8" 
+        placeholder="Mínimo 8 caracteres" 
+        maxlength="12" required>
+    </div>
+
+    <div class="input-group">
+        <label for="confirmar_senha">Confirmar Senha:</label> 
+        <input type="password" name="confirmar_senha" id="confirmar_senha" 
+        minlength="8"  
+        maxlength="12" required>
+    </div>
+
+        <p id="mensagem-erro" style="color:red;"></p>
+
+         
+    <div class="terms-group">
+            <input type="checkbox" name="termos" id="termos" required>
+            <label for="termos">Eu li e aceito os <a href="termos.html">Termos de Uso</a>.</label>
+
+
+    </div>
+
+    <div class="button-group">
+        <input type="submit" value="Continuar">
+        <input type="reset" value="Limpar">
+    </div>
+
+        <hr>
+        <p>Já tem uma conta? <a href="login.html">Faça login</a>.</p>
+    
+</form>
+</main>
+
+<script src="cadastro.js"></script>
+
+</body>
+</html>
+
+
