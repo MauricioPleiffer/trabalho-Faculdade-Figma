@@ -183,7 +183,7 @@ nav a:hover {
 }
 
 /* Seção de serviços */
-#servicos {
+.servicos1 {
     padding: 80px 0;
 }
 
@@ -194,6 +194,10 @@ nav a:hover {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
+}
+
+.servico p{
+    padding: 10px;
 }
 
 .servico {
@@ -242,6 +246,11 @@ nav a:hover {
     background-color: #f8f9fa;
 }
 
+.quilo {
+    text-align: center;
+    padding: 100px;
+}
+
 .cards-precos {
     max-width: 1200px;
     margin: 0 auto;
@@ -279,7 +288,7 @@ nav a:hover {
 }
 
 .preco {
-    font-size: 32px;
+    font-size: 25px;
     font-weight: bold;
     color: #007bff;
     margin-bottom: 30px;
@@ -303,6 +312,11 @@ nav a:hover {
     grid-template-columns: 1fr 1fr;
     gap: 50px;
     align-items: center;
+}
+
+.main-title{
+    text-align: center;
+    margin-bottom: 50PX;
 }
 
 .texto-sobre h2 {
@@ -434,6 +448,10 @@ nav a:hover {
     color: #ccc;
 }
 
+#footer-sla {
+    background-color: #333;
+}
+
 .contato-item {
     margin-bottom: 10px;
 }
@@ -503,6 +521,7 @@ nav a:hover {
     padding-top: 15px;
     text-align: center;
     color: #ccc;
+    background-color: #333;
 }
 
 .footer-bottom p {
