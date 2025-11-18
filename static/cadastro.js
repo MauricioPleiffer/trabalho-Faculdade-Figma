@@ -144,4 +144,28 @@ document.addEventListener('DOMContentLoaded', function () {
             mensagem.style.color = 'red'; 
         }, 4000);
     });
+
+    const loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) {
+        loginBtn.onclick = async function () {
+            const username = prompt("Digite seu nome de usuário:");
+            const senha = prompt("Digite sua senha:");
+
+            const response = await fetch('/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, senha })
+            });
+
+            const result = await response.json();
+            if (result.ok) {
+                alert(result.msg);
+                window.location.reload(); // Recarrega a página para refletir o login
+            } else {
+                alert(result.msg);
+            }
+        };
+    }
 });
