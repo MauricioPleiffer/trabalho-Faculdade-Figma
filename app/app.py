@@ -29,7 +29,12 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 google_bp = make_google_blueprint(
     client_id="96734921781-vpg8c994qchlccki3qm84o6522v0b586.apps.googleusercontent.com",
     client_secret="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",
-    redirect_to="google_login"  # nome da rota abaixo
+    scope=[
+        "openid",
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email"
+    ],
+    redirect_to="google_login"  # NOME DA ROTA, NÃO URL!
 )
 app.register_blueprint(google_bp, url_prefix="/login")
 
@@ -88,4 +93,3 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
