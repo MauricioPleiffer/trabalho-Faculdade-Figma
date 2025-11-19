@@ -134,15 +134,13 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('cadastros', JSON.stringify(cadastros));
 
         
-        form.reset();
-        mensagem.textContent = 'Cadastro realizado com sucesso!';
-        mensagem.style.color = 'green';
+     form.reset();
+mensagem.textContent = 'Cadastro realizado com sucesso!';
+mensagem.style.color = 'green';
 
-       
-        setTimeout(() => { 
-            mensagem.textContent = '';
-            mensagem.style.color = 'red'; 
-        }, 4000);
+setTimeout(() => {
+    window.location.href = "/";   // <- AQUI acontece o redirecionamento
+}, 1500);
     });
 
     const loginBtn = document.getElementById('loginBtn');
