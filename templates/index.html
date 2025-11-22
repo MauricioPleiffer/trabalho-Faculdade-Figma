@@ -226,11 +226,11 @@
                     </div>
                     <div class="form-options">
                         <label class="checkbox-label">
-                            <input type="checkbox" id="lembrar"> Lembrar de mim
+                            <input type="checkbox" id="lembrar"> Lembrar-me
                         </label>
                         <a href="#" class="esqueci-senha">Esqueci minha senha</a>
                     </div>
-                    <button type="submit" class="botao-login-submit">Entrar</button>
+                    <button type="submit" class="botao-login-modal">Entrar</button>
                 </form>
                 <div class="divider">
                     <span>ou</span>
@@ -251,85 +251,89 @@
     </div>
 
     <script>
-        
-    // login restaurado (visual e opções sociais);
-    var usuarios = [];
-    var usuarioLogado = null;
+        // ------ Login via Flask (substitui o login localStorage) ------
+let usuarioLogado = null;
 
-    if (localStorage.getItem('usuarios')) usuarios = JSON.parse(localStorage.getItem('usuarios'));
-    if (localStorage.getItem('usuarioLogado')) usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
-    if (usuarios.length === 0) { usuarios.push({ id: 1, nome: 'João Silva', email: 'joao@teste.com', senha: '123456' }); localStorage.setItem('usuarios', JSON.stringify(usuarios)); }
+function abrirLogin(){ var m = document.getElementById('loginModal'); if(m) m.style.display = 'block'; }
+function fecharLogin(){ var m = document.getElementById('loginModal'); if(m) m.style.display = 'none'; }
 
-    function abrirLogin(){ var m = document.getElementById('loginModal'); if(m) m.style.display = 'block'; }
-    function fecharLogin(){ var m = document.getElementById('loginModal'); if(m) m.style.display = 'none'; }
+function atualizarBotao(){ 
+    var b = document.getElementById('loginBtn'); 
+    if(!b) return; 
+    if(usuarioLogado){ 
+        b.textContent = 'Olá, ' + usuarioLogado.nome; 
+        b.style.backgroundColor = '#28a745'; 
+    } else { 
+        b.textContent = 'Login'; 
+        b.style.backgroundColor = ''; 
+    } 
+}
 
-    function atualizarBotao(){ var b = document.getElementById('loginBtn'); if(!b) return; if(usuarioLogado){ b.textContent = 'Olá, ' + usuarioLogado.nome; b.style.backgroundColor = '#28a745'; } else { b.textContent = 'Login'; b.style.backgroundColor = ''; } }
+window.addEventListener('load', function () {
+    atualizarBotao();
+window
+    var loginBtn = document.getElementById('loginBtn');
+    if (loginBtn) loginBtn.onclick = function () { 
+        if (usuarioLogado) { 
+            if (confirm('Deseja sair?')) { 
+                // logout simples: pedir ao servidor para limpar sessão (opcional)
+                fetch('/auth/logout', { method: 'POST' })
+                    .then(()=> { usuarioLogado = null; atualizarBotao(); location.reload(); })
+                    .catch(()=> { usuarioLogado = null; atualizarBotao(); location.reload(); });
+            } 
+        } else { abrirLogin(); } 
+    };
 
-    
-    //Função para realizar a verificação e autenticação do login do usuário
-    //@param {string} email - Email do usuário
-    //@param {string} senha - Senha do usuário
-    //@param {boolean} lembrar - Se true, mantém o login mesmo após fechar o navegador
-    //@returns {boolean} Retorna true se o login for bem sucedido, false caso contrário
-     
-        function fazerLogin(email, senha, lembrar){
-        //Percorre a lista de usuários cadastrados
-        for ( var i=0;i<usuarios.length;i++){
-        //Verifica se email e senha correspondem a um usuário válido
-          if(usuarios[i].email===email && usuarios[i].senha===senha){
-       //Armazena o usuário logado na variável global
-           usuarioLogado = usuarios[i];
-        //Se a opção "lembrar" estiver marcada, salva no localStorage (persiste mesmo após fechar o navegador)
-            if(lembrar){
-              localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-          } else {
-        //Caso contrário, salva no sessionStorage (persiste apenas durante a sessão)
-              sessionStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-         }
-         return true; // Login bem sucedido
-        }
-        }
-            return false; // Usuário não encontrado ou senha incorreta
-        }
+    var closeLogin = document.querySelector('.close'); if (closeLogin) closeLogin.onclick = fecharLogin;
 
-        //function fazerLogout(){ usuarioLogado = null; localStorage.removeItem('usuarioLogado'); sessionStorage.removeItem('usuarioLogado'); atualizarBotao(); }
+    var formLogin = document.getElementById('loginForm');
+    if (formLogin) formLogin.onsubmit = async function (e) {
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const senha = document.getElementById('senha').value;
+        const lembrar = document.getElementById('lembrar') && document.getElementById('lembrar').checked;
 
-        window.addEventListener('load', function () {
-            // se estava em sessionStorage e não em localStorage, restaurar temporariamente
-            if (!usuarioLogado && sessionStorage.getItem('usuarioLogado')) { usuarioLogado = JSON.parse(sessionStorage.getItem('usuarioLogado')); }
-            atualizarBotao();
-
-            var loginBtn = document.getElementById('loginBtn');
-            if (loginBtn) loginBtn.onclick = function () { if (usuarioLogado) { if (confirm('Deseja sair?')) { fazerLogout(); } } else { abrirLogin(); } };
-
-            var closeLogin = document.querySelector('.close'); if (closeLogin) closeLogin.onclick = fecharLogin;
-
-            var formLogin = document.getElementById('loginForm');
-            if (formLogin) formLogin.onsubmit = function (e) { e.preventDefault(); var email = document.getElementById('email').value.trim(); var senha = document.getElementById('senha').value; var lembrar = document.getElementById('lembrar') && document.getElementById('lembrar').checked; if (fazerLogin(email, senha, lembrar)) { alert('Login ok!'); fecharLogin(); atualizarBotao(); formLogin.reset(); } else { alert('Email ou senha errados.'); } };
-
-            var cadastroLink = document.getElementById('cadastroLink'); 
-            if (cadastroLink) { 
-                cadastroLink.onclick = function (e) { 
-                    e.preventDefault(); 
-                    // Redireciona para a página de cadastro
-                    window.location.href = '/cadastro'; 
-                }; 
+        try {
+            const resp = await fetch('/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: email, senha: senha })
+            });
+            const data = await resp.json();
+            if (data.ok) {
+                // login bem sucedido
+                // opcional: atualizar variável local para exibir nome sem recarregar
+                usuarioLogado = { nome: data.usuario_nome || email };
+                atualizarBotao();
+                fecharLogin();
+                window.location.href = '/'; // redireciona para home
+            } else {
+                alert(data.msg || 'Email ou senha incorretos.');
             }
+        } catch (err) {
+            console.error(err);
+            alert('Erro de conexão ao tentar logar.');
+        }
+    };
 
-            var socialGoogle = document.querySelector('.botao-social.google');
-            if (socialGoogle) {
-                socialGoogle.onclick = function () {
-                    // Redireciona para o endpoint Flask que inicia o OAuth
-                    window.location.href = '/google_login';
-                };
-            }
-            var socialFb = document.querySelector('.botao-social.facebook'); if (socialFb) socialFb.onclick = function () { alert('Login com Facebook não implementado aqui.'); };
+    // cadastroLink continua igual
+    var cadastroLink = document.getElementById('cadastroLink'); 
+    if (cadastroLink) { 
+        cadastroLink.onclick = function (e) { 
+            e.preventDefault(); 
+            window.location.href = '/cadastro'; 
+        }; 
+    }
 
-            var servicosLink = document.querySelector('a[href="#servicos"]'); if (servicosLink) servicosLink.onclick = function (e) { if (!usuarioLogado) { e.preventDefault(); abrirLogin(); } };
-
-            var serviceAnchors = document.querySelectorAll('a.botao-principal, a.botao, a.botao-secundario');
-            for (var i = 0; i < serviceAnchors.length; i++) { (function (el) { if (el && el.tagName && el.tagName.toLowerCase() === 'a') { el.onclick = function (e) { if (!usuarioLogado) { e.preventDefault(); abrirLogin(); } }; } })(serviceAnchors[i]); }
-        });
+    // botão Google continua redirecionando para /google_login
+    var socialGoogle = document.querySelector('.botao-social.google');
+    if (socialGoogle) {
+        socialGoogle.onclick = function () {
+            window.location.href = '/google_login';
+        };
+    }
+});
+// ---------------------------------------------------------------
 
         // --- Carrinho simples (persistido em localStorage) ---
         (function () {

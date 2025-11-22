@@ -62,108 +62,82 @@ document.addEventListener('DOMContentLoaded', function () {
     confirmar.addEventListener('input', validarSenhas);
 
     form.addEventListener('submit', async function (e) {
-        
-        e.preventDefault(); 
+        e.preventDefault();
 
         mensagem.textContent = '';
         mensagem.style.color = 'red';
 
-      
-        const emailValue = email.value.toLowerCase();
-        const typosComuns = [
-            '@gmail.co', '@gmail.cm',
-            '@hotmail.co', '@hotmail.cm',
-            '@outlook.co', '@outlook.cm',
-            '@yahoo.co', '@yahoo.cm'
-        ];
+    // Validações de email
+    const emailValue = email.value.toLowerCase();
+    const typosComuns = [
+        '@gmail.co', '@gmail.cm',
+        '@hotmail.co', '@hotmail.cm',
+        '@outlook.co', '@outlook.cm',
+        '@yahoo.co', '@yahoo.cm'
+    ];
 
-        let emailComErro = false;
-        for (const erro of typosComuns) {
-            if (emailValue.endsWith(erro)) {
-                emailComErro = true;
-                break;
-            }
+    let emailComErro = false;
+    for (const erro of typosComuns) {
+        if (emailValue.endsWith(erro)) {
+            emailComErro = true;
+            break;
         }
-
-        if (emailComErro) {
-            mensagem.textContent = 'Seu e-mail parece ter um erro de digitação (ex: ".co" em vez de ".com"). Por favor, corrija.';
-            email.focus(); 
-            return;
-        }
-
-        if (!validarSenhas()) {
-            senha.focus();
-            return;
-        }
-
-        const cpfDigits = cpf.value.replace(/\D/g, '');
-        if (cpfDigits.length !== 11) {
-            mensagem.textContent = 'CPF incompleto. Deve conter 11 dígitos.';
-            cpf.focus();
-            return;
-        }
-
-        const telDigits = telefone.value.replace(/\D/g, '');
-        if (telDigits.length < 10) {
-            mensagem.textContent = 'Telefone incompleto. Deve conter 10 ou 11 dígitos.';
-            telefone.focus();
-            return;
-        }
-        
-       
-        const cadastros = JSON.parse(localStorage.getItem('cadastros') || '[]');
-        if (cadastros.some(c => c.email === emailValue)) {
-            mensagem.textContent = 'Este e-mail já foi cadastrado.';
-            email.focus();
-            return;
-        }
-
-        
-        const senhaHash = await hashSHA256(senha.value);
-
-        
-        cadastros.push({ 
-            nome: nome.value.trim(),
-            sobrenome: sobrenome.value.trim(),
-            email: emailValue,
-            cpf: cpfDigits, 
-            telefone: telDigits,
-            senhaHash: senhaHash, 
-            criadoEm: new Date().toISOString() 
-        });
-        localStorage.setItem('cadastros', JSON.stringify(cadastros));
-
-        
-     form.reset();
-mensagem.textContent = 'Cadastro realizado com sucesso!';
-mensagem.style.color = 'green';
-
-setTimeout(() => {
-    window.location.href = "/";   // <- AQUI acontece o redirecionamento
-}, 1500);
-    });
-
-    const loginBtn = document.getElementById('loginBtn');
-    if (loginBtn) {
-        loginBtn.onclick = async function () {
-            const username = prompt("Digite seu nome de usuário:");
-            const senha = prompt("Digite sua senha:");
-
-            const response = await fetch('/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, senha })
-            });
-
-            const result = await response.json();
-            if (result.ok) {
-                alert(result.msg);
-                window.location.reload(); // Recarrega a página para refletir o login
-            } else {
-                alert(result.msg);
-            }
-        };
     }
+
+    if (emailComErro) {
+        mensagem.textContent = 'Seu e-mail parece ter um erro de digitação (ex: ".co" em vez de ".com"). Por favor, corrija.';
+        email.focus(); 
+        return;
+    }
+
+    if (!validarSenhas()) {
+        senha.focus();
+        return;
+    }
+
+    const cpfDigits = cpf.value.replace(/\D/g, '');
+    if (cpfDigits.length !== 11) {
+        mensagem.textContent = 'CPF incompleto. Deve conter 11 dígitos.';
+        cpf.focus();
+        return;
+    }
+
+    const telDigits = telefone.value.replace(/\D/g, '');
+    if (telDigits.length < 10) {
+        mensagem.textContent = 'Telefone incompleto. Deve conter 10 ou 11 dígitos.';
+        telefone.focus();
+        return;
+    }
+
+    // ENVIAR PARA O BACKEND FLASK
+    try {
+        const resp = await fetch('/auth/cadastro', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: emailValue,
+                senha: senha.value
+            })
+        });
+
+        const data = await resp.json();
+        
+        if (data.ok) {
+            form.reset();
+            mensagem.textContent = 'Cadastro realizado com sucesso! Redirecionando...';
+            mensagem.style.color = 'green';
+            
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1500);
+        } else {
+            mensagem.textContent = data.msg || 'Erro ao cadastrar.';
+            mensagem.style.color = 'red';
+        }
+    } catch (err) {
+        console.error(err);
+        mensagem.textContent = 'Erro de conexão ao cadastrar.';
+        mensagem.style.color = 'red';
+    }
+    });
 });
