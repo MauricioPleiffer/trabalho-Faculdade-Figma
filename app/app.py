@@ -1,5 +1,6 @@
 import os
 from flask import Flask, render_template, session, redirect, url_for, request, jsonify
+from flask_dance.contrib.google import make_google_blueprint, google
 
 # importe seus módulos locais
 import carrinho
@@ -16,13 +17,34 @@ app = Flask(__name__,
 
 app.secret_key = os.environ.get('FLASK_SECRET', 'tenis123')
 
-# Registro dos blueprints existentes
-app.register_blueprint(carrinho.carrinho_bp)        # /auth prefix is inside carrinho blueprint if defined
-app.register_blueprint(cadastro.cadastro_bp)        # cadastro_bp uses url_prefix='/auth'
+# Registrar blueprints existentes
+# cadastro.cadastro_bp deve ter url_prefix='/auth' conforme projeto
+app.register_blueprint(carrinho.carrinho_bp)
+app.register_blueprint(cadastro.cadastro_bp)
 
-# Registrar o blueprint do Flask-Dance para Google em /auth/google
-# Isso fará com que os endpoints sejam: /auth/google/login e /auth/google/authorized
-app.register_blueprint(cadastro.google_bp, url_prefix="/auth/google")
+# Registrar blueprint do Google: preferir cadastro.google_bp se presente
+if hasattr(cadastro, 'google_bp'):
+    try:
+        app.register_blueprint(cadastro.google_bp, url_prefix="/auth/google")
+    except Exception:
+        pass
+else:
+    # Cria blueprint local usando variáveis de ambiente (não inclua secrets no repo)
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+    GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
+    GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
+    if GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET:
+        google_bp = make_google_blueprint(
+            client_id=GOOGLE_CLIENT_ID,
+            client_secret=GOOGLE_CLIENT_SECRET,
+            scope=[
+                "openid",
+                "https://www.googleapis.com/auth/userinfo.profile",
+                "https://www.googleapis.com/auth/userinfo.email"
+            ],
+            redirect_to="google_callback"
+        )
+        app.register_blueprint(google_bp, url_prefix="/auth/google")
 
 servicos = [    
     {"id": 1, "nome": "Lavar e Secar", "preco": 28.00},
@@ -40,7 +62,9 @@ def index():
 
 @app.route('/catalogo')
 def catalogo():
-    return render_template('catalogo.html', servicos=servicos) if os.path.exists(os.path.join(template_dir, 'catalogo.html')) else redirect(url_for('index'))
+    if os.path.exists(os.path.join(template_dir, 'catalogo.html')):
+        return render_template('catalogo.html', servicos=servicos)
+    return redirect(url_for('index'))
 
 @app.route('/carrinho')
 def view_carrinho():
@@ -48,21 +72,23 @@ def view_carrinho():
 
 @app.route('/cadastro')
 def view_cadastro():
-    return render_template('cadastro.html') if os.path.exists(os.path.join(template_dir, 'cadastro.html')) else redirect(url_for('index'))
+    if os.path.exists(os.path.join(template_dir, 'cadastro.html')):
+        return render_template('cadastro.html')
+    return redirect(url_for('index'))
 
-# Rota chamada após autorização do Google (redirect_to="google_callback" em cadastro.google_bp)
+# Rota chamada após autorização do Google (redirect_to="google_callback")
 @app.route("/auth/google_callback")
 def google_callback():
-    # Se não autorizado, iniciar o fluxo OAuth (redireciona para /auth/google/login)
-    if not cadastro.google.authorized:
+    # provider pode vir do módulo cadastro (cadastro.google) ou do import 'google'
+    provider = getattr(cadastro, 'google', None) or globals().get('google')
+    if not provider or not provider.authorized:
         return redirect(url_for("google.login"))
 
-    resp = cadastro.google.get("/oauth2/v2/userinfo")
+    resp = provider.get("/oauth2/v2/userinfo")
     if not resp or not resp.ok:
         return "Erro ao acessar informações do Google", 400
 
     user_info = resp.json()
-    # Armazenar dados do usuário na sessão
     session['usuario'] = {
         "nome": user_info.get("name") or user_info.get("email"),
         "email": user_info.get("email"),
@@ -74,10 +100,11 @@ def google_callback():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop('usuario', None)
-    # tentar limpar token do Flask-Dance
+    # tentar limpar token do Flask-Dance se presente
     try:
-        if getattr(cadastro.google, 'token', None):
-            cadastro.google.token = None
+        provider = getattr(cadastro, 'google', None) or globals().get('google')
+        if provider and getattr(provider, 'token', None):
+            provider.token = None
     except Exception:
         pass
     return redirect(url_for('index'))
@@ -88,4 +115,3 @@ def usuario_info():
 
 if __name__ == '__main__':
     app.run(debug=True)
-

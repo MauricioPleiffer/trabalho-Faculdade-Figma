@@ -18,7 +18,13 @@ body{
     display: flex;
     flex-direction: column;     
     gap: 30px;
+<<<<<<< HEAD
     height: 100%;
+=======
+    height: auto;       
+    max-width: 450px;   
+    width: 100%;        
+>>>>>>> aeb327df08837789047bc6b8d8419220165be5a1
     background-color: #f6f6f6;
     padding: 40px;
     border-radius: 10px;
@@ -28,7 +34,12 @@ body{
 #form_header{
     display: flex;
     justify-content: space-between;
+<<<<<<< HEAD
     align-items: center;
+=======
+    align-items: flex-start;
+    padding-top: 40px;
+>>>>>>> aeb327df08837789047bc6b8d8419220165be5a1
 }
 
 #form_title{

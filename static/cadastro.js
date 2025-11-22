@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Variáveis/globais iniciais (evita erros se não definidas em outro script)
 var usuarioLogado = null;
 var usuarios = []; // pode ser preenchido pelo servidor se necessário
@@ -220,6 +221,10 @@ window.addEventListener('load', function () {
 })();
 
 document.addEventListener('DOMContentLoaded', function () {
+=======
+document.addEventListener('DOMContentLoaded', function () {
+
+>>>>>>> aeb327df08837789047bc6b8d8419220165be5a1
     const form = document.getElementById('form-cadastro');
     const senha = document.getElementById('senha');
     const confirmar = document.getElementById('confirmar_senha');
@@ -230,6 +235,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const telefone = document.getElementById('telefone');
     const email = document.getElementById('email');
 
+<<<<<<< HEAD
+=======
+    
+>>>>>>> aeb327df08837789047bc6b8d8419220165be5a1
     function mascaraCPF() {
         let valor = this.value.replace(/\D/g, '');
         valor = valor.substring(0, 11);
@@ -258,12 +267,30 @@ document.addEventListener('DOMContentLoaded', function () {
             mensagem.style.color = 'red';
             return false;
         }
+<<<<<<< HEAD
         if (senha.value === confirmar.value && senha.value) {
+=======
+        if (senha.value === confirmar.value) {
+>>>>>>> aeb327df08837789047bc6b8d8419220165be5a1
             mensagem.textContent = '';
         }
         return true;
     }
 
+<<<<<<< HEAD
+=======
+   
+    async function hashSHA256(text) {
+        if (!text) return '';
+        const enc = new TextEncoder();
+        const data = enc.encode(text);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+   
+>>>>>>> aeb327df08837789047bc6b8d8419220165be5a1
     cpf.addEventListener('input', mascaraCPF);
     telefone.addEventListener('input', mascaraTelefone);
     senha.addEventListener('input', validarSenhas);
@@ -275,6 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
         mensagem.textContent = '';
         mensagem.style.color = 'red';
 
+<<<<<<< HEAD
         const emailValue = email.value.toLowerCase();
         const typosComuns = [
             '@gmail.co', '@gmail.cm',
@@ -351,3 +379,79 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+=======
+    // Validações de email
+    const emailValue = email.value.toLowerCase();
+    const typosComuns = [
+        '@gmail.co', '@gmail.cm',
+        '@hotmail.co', '@hotmail.cm',
+        '@outlook.co', '@outlook.cm',
+        '@yahoo.co', '@yahoo.cm'
+    ];
+
+    let emailComErro = false;
+    for (const erro of typosComuns) {
+        if (emailValue.endsWith(erro)) {
+            emailComErro = true;
+            break;
+        }
+    }
+
+    if (emailComErro) {
+        mensagem.textContent = 'Seu e-mail parece ter um erro de digitação (ex: ".co" em vez de ".com"). Por favor, corrija.';
+        email.focus(); 
+        return;
+    }
+
+    if (!validarSenhas()) {
+        senha.focus();
+        return;
+    }
+
+    const cpfDigits = cpf.value.replace(/\D/g, '');
+    if (cpfDigits.length !== 11) {
+        mensagem.textContent = 'CPF incompleto. Deve conter 11 dígitos.';
+        cpf.focus();
+        return;
+    }
+
+    const telDigits = telefone.value.replace(/\D/g, '');
+    if (telDigits.length < 10) {
+        mensagem.textContent = 'Telefone incompleto. Deve conter 10 ou 11 dígitos.';
+        telefone.focus();
+        return;
+    }
+
+    // ENVIAR PARA O BACKEND FLASK
+    try {
+        const resp = await fetch('/auth/cadastro', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: emailValue,
+                senha: senha.value
+            })
+        });
+
+        const data = await resp.json();
+        
+        if (data.ok) {
+            form.reset();
+            mensagem.textContent = 'Cadastro realizado com sucesso! Redirecionando...';
+            mensagem.style.color = 'green';
+            
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1500);
+        } else {
+            mensagem.textContent = data.msg || 'Erro ao cadastrar.';
+            mensagem.style.color = 'red';
+        }
+    } catch (err) {
+        console.error(err);
+        mensagem.textContent = 'Erro de conexão ao cadastrar.';
+        mensagem.style.color = 'red';
+    }
+    });
+});
+>>>>>>> aeb327df08837789047bc6b8d8419220165be5a1

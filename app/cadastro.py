@@ -5,13 +5,11 @@ from flask import Blueprint, request, jsonify, render_template, session, redirec
 from datetime import datetime
 from flask_dance.contrib.google import make_google_blueprint, google
 
-# Criar o Blueprint para cadastro
 cadastro_bp = Blueprint('cadastro', __name__, template_folder='../templates', url_prefix='/auth')
 
-USERS_FILE = 'usuarios.json'
+USERS_FILE = os.path.join(os.path.dirname(__file__), 'usuarios.json')
 
 def carregar_usuarios():
-    """Carrega usuários do arquivo JSON"""
     if os.path.exists(USERS_FILE):
         try:
             with open(USERS_FILE, 'r', encoding='utf-8') as f:
@@ -21,12 +19,10 @@ def carregar_usuarios():
     return []
 
 def salvar_usuarios(usuarios):
-    """Salva usuários no arquivo JSON"""
     with open(USERS_FILE, 'w', encoding='utf-8') as f:
         json.dump(usuarios, f, ensure_ascii=False, indent=2)
 
 def hash_senha(senha):
-    """Gera hash SHA256 da senha"""
     return hashlib.sha256(senha.encode()).hexdigest()
 
 @cadastro_bp.route('/register', methods=['POST'])
@@ -43,8 +39,8 @@ def register():
     users.append({
         'nome': nome,
         'email': email,
-        'senha': hash_senha(senha),
-        'criado_em': datetime.utcnow().isoformat()
+        'senhaHash': hash_senha(senha),
+        'criadoEm': datetime.utcnow().isoformat()
     })
     salvar_usuarios(users)
     return jsonify({'ok': True})
@@ -58,29 +54,32 @@ def login():
         return jsonify({'ok': False, 'msg': 'Dados incompletos'}), 400
     users = carregar_usuarios()
     hashed = hash_senha(senha)
-    user = next((u for u in users if u.get('email') == email and u.get('senha') == hashed), None)
+    user = next((u for u in users if u.get('email') == email and u.get('senhaHash') == hashed), None)
     if not user:
         return jsonify({'ok': False, 'msg': 'Credenciais inválidas'}), 401
-    session['usuario'] = {'nome': user.get('nome'), 'email': user.get('email'), 'tipo_login': 'local'}
+    session['usuario'] = {'nome': user.get('nome'), 'email': user.get('email'), 'tipo_login': 'email'}
     return jsonify({'ok': True})
 
 # LOGIN COM GOOGLE (Flask-Dance)
-# Permitir HTTP local (apenas para desenvolvimento)
-os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # apenas para desenvolvimento local
 
-GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '96734921781-vpg8c994qchlccki3qm84o6522v0b586.apps.googleusercontent.com')
-GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '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')
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
+GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
 
-# blueprint do Flask-Dance — não usa url_prefix aqui; será registrado em app.py com o prefix desejado
-google_bp = make_google_blueprint(
-    client_id=GOOGLE_CLIENT_ID,
-    client_secret=GOOGLE_CLIENT_SECRET,
-    scope=[
-        "openid",
-        "https://www.googleapis.com/auth/userinfo.profile",
-        "https://www.googleapis.com/auth/userinfo.email"
-    ],
-    redirect_to="google_callback"  # nome da rota em app.py que será chamada após autorização
-)
+# não coloque client_secret fixo no repo; use variáveis de ambiente
+if GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET:
+    google_bp = make_google_blueprint(
+        client_id=GOOGLE_CLIENT_ID,
+        client_secret=GOOGLE_CLIENT_SECRET,
+        scope=[
+            "openid",
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/userinfo.email"
+        ],
+        redirect_to="google_callback"
+    )
+else:
+    # deixar google_bp ausente quando credenciais não estiverem definidas
+    google_bp = None
 
-# 'google' (importado) é o proxy que app.py usará para obter userinfo
+# expor objeto proxy 'google' do flask-dance (importado acima) para app.py usar
