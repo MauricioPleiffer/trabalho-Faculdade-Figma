@@ -1,50 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="../static/styles.css"> -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css')}}">
     <title>Lave já - Carrinho</title>
-    <script src="{{ url_for('static', filename='script.js')}}"></script>
-    <style>
-        
-    </style>
 </head>
 <body>
     <header>
         <div class="header">
             <div class="logo">
-                <img src="/static/imagem/lave.ja.png" alt="Logo Lave Já" width="60" style="border-radius: 5px;">
+                <img src="{{ url_for('static', filename='imagem/lave.ja.png') }}" alt="Logo Lave Já" width="60" style="border-radius: 5px;">
             </div>
             <div>
                 <a href="{{ url_for('catalogo')}}" class="btn-voltar">VOLTAR AO CATÁLOGO</a>
             </div>
         </div>
     </header>
+
     <main>
         <section id="carrinho" class="servicos1">
-            <div class="box-carrinho">
-                <div>
-                    <h2>Seu Carrinho</h2>
-                    <div id="cartArea">
-                        <p id="cartEmpty" class="cart-empty">Seu carrinho está vazio.</p>
-                        <ul id="cartItems" class="cart-items" style="display: none;"></ul>
-                        <div class="cart-actions" id="cartActions" style="display: none;">
-                            <button id="clearCart" class="btn-clear">Limpar carrinho</button>
-                            <button id="checkout" class="btn-checkout">Finalizar pedido</button>
-                        </div>
+            <div class="cart-container">
+                <div class="cart-header">
+                    <div>
+                        <h2>Seu Carrinho</h2>
+                        <p class="cart-subtitle">Confira os itens selecionados</p>
+                    </div>
+                    <div class="cart-summary">
+                        <span id="cartCountHeader">Itens: <strong id="cartCount">0</strong></span>
+                    </div>
+                </div>
+
+                <div id="cartArea">
+                    <p id="cartEmpty" class="cart-empty">Seu carrinho está vazio.</p>
+
+                    <ul id="cartItems" class="cart-items" style="display:none;"></ul>
+
+                    <div id="cartTotal" class="cart-total" style="display:none;">
+                        <div class="cart-total-label">Total</div>
+                        <div class="cart-total-value"><span id="totalValue">R$ 0,00</span></div>
+                    </div>
+
+                    <div id="cartActions" class="cart-actions" style="display:none;">
+                        <button id="clearCart" class="btn-clear">Limpar carrinho</button>
+                        <button id="checkout" class="btn-checkout">Finalizar pedido</button>
                     </div>
                 </div>
             </div>
         </section>
     </main>
+
     <footer class="footer-bottom">
         <div id="footer-bottom">
             <p>© 2025 LaveJá - Lavanderia Profissional. Todos os direitos reservados.</p>
-            <p>Desenvolvido com ❤️ para cuidar das suas roupas</p>
         </div>
-        <div class="footer-completo"></div>
     </footer>
+
+    <script src="{{ url_for('static', filename='script.js')}}"></script>
 </body>
 </html>

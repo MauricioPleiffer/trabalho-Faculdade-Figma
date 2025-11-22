@@ -5,36 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lave Já - Lavanderia</title>
     <!-- CSS do projeto -->
-
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <!-- <link rel="stylesheet" href="../static/styles.css">! -->
     <!-- Estilos inline para algumas coisas -->
     <style>
         /* Estilos básicos */
     </style>
     <!-- SDK opcional do Google para visualização do botão -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <!-- Script principal da aplicação -->
-    <script src="{{ url_for('static', filename='script.js')}}"></script>
 </head>
 <body>
     <!-- Cabeçalho do site -->
     <header>
         <div class="header">
-                <div class="logo">
-                    <img src="{{ url_for('static', filename='imagem/lave.ja.png') }}" alt="Logo Lave Já" width="60" style="border-radius: 5px;">        
-                </div>
+            <div class="logo">
+                <img src="{{ url_for('static', filename='imagem/lave.ja.png') }}" alt="Logo Lave Já" width="60" style="border-radius: 5px;">        
+            </div>
             <nav>
                 <a href="{{ url_for('catalogo')}}" class="botao-login">CATALOGO <span id="cartCount" class="cart-count">0</span></a>
                 <button id="loginBtn" class="botao-login">LOGIN</button>
-                {% if session.usuario %}
-    <p class="user-info">
-        Bem-vindo, {{ session.usuario.nome }}
-        {% if session.usuario.tipo_login == 'google' %}
-            <span style="color: #4285F4;">(Google)</span>
-        {% endif %}
-    </p>
-{% endif %}
+                {% if usuario %}
+                <p class="user-info">
+                    Bem-vindo, {{ usuario.nome }}
+                    {% if usuario.tipo_login == 'google' %}
+                    <span style="color: #4285F4;">(Google)</span>
+                    {% endif %}
+                </p>
+                {% endif %}
             </nav>
         </div>
     </header>
@@ -47,8 +43,8 @@
                     <h1>Lave Já - Sua Lavanderia de Confiança</h1>
                     <p>Serviços profissionais de lavagem, passadoria e entrega. Cuide das suas roupas com quem entende do assunto.</p>
                     <div class="botoes">
-                        <a href="#contato" class="botao-principal">Solicitar Serviço</a>
-                        <a href="#{{ url_for('catalogo')}}" class="botao-secundario">Ver Serviços</a>
+                        <a href="#" id="btnSolicitar" class="botao-principal">Solicitar Serviço</a>
+                        <a href="{{ url_for('catalogo')}}" class="botao-secundario">Ver Serviços</a>
                     </div>
                 </div>
                 <div class="imagem-principal">
@@ -82,19 +78,19 @@
         <section id="precos" class="precos">
             <div class="cards-precos">
                 <div class="card-preco">
-                    <h4>Lavagem Simples</h4>
-                    <p class="preco">R$15<span>/kg</span></p>
-                    <a href="{{ url_for('catalogo')}}" class="botao">Solicitar</a>
+                    <h4>Lavar e Secar</h4>
+                    <p class="preco">R$28<span>/kg</span></p>
+                    <a href="#" class="botao solicitarBtn">Solicitar</a>
                 </div>
                 <div class="card-preco destaque">
-                    <h4>Lavagem + Passadoria</h4>
-                    <p class="preco">R$25<span>/kg</span></p>
-                    <a href="{{ url_for('catalogo')}}" class="botao" onclick="lavejaAddToCart(2, 'Lavagem + Passadoria', 25.00)">Solicitar</a>
+                    <h4>Lavar a Seco</h4>
+                    <p class="preco">R$44<span>/kg</span></p>
+                    <a href="#" class="botao solicitarBtn">Solicitar</a>
                 </div>
                 <div class="card-preco">
                     <h4>Serviço Completo</h4>
                     <p class="preco">Sob consulta</p>
-                    <a href="#contato" class="botao-secundario">Contato</a>
+                    <a href="#" class="botao-secundario solicitarBtn">Contato</a>
                 </div>
             </div>
         </section>
@@ -114,7 +110,7 @@
         </section>
     </main>
 
-    <!-- Rodapé (restaurado) -->
+    <!-- Rodapé -->
     <footer class="footer-completo">
         <div class="container-footer">
             <!-- Seção Contato -->
@@ -174,7 +170,7 @@
         </div>
     </footer>
 
-    <!-- Modal de Login (restaurado) -->
+    <!-- Modal de Login -->
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -203,18 +199,19 @@
                     <span>ou</span>
                 </div>
                 <div class="social-login">
-    <a href="/google_login" class="botao-social google" id="googleLoginBtn">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-             alt="Google" width="20" style="vertical-align: middle; margin-right: 8px;">
-        Entrar com Google
-    </a>
-    <button class="botao-social facebook">Entrar com Facebook</button>
-</div>
+                    <a href="{{ url_for('google.login') }}" class="botao-social google" rel="nofollow noopener">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20" style="vertical-align: middle; margin-right: 8px;">Entrar com Google
+                    </a>
+                    <button type="button" class="botao-social facebook">Entrar com Facebook</button>
+                </div>
                 <div class="cadastro-link">
-                    <p>Não tem uma conta? <a href="#" id="cadastroLink">Cadastre-se aqui</a></p>
+                    <p>Não tem uma conta? <a href="{{ url_for('view_cadastro')}}" id="cadastroLink">Cadastre-se aqui</a></p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Script principal da aplicação -->
+    <script src="{{ url_for('static', filename='script.js')}}"></script>
 </body>
 </html>

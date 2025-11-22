@@ -1,23 +1,8 @@
 // ============================================
-// MÓDULO DE LOGIN
+// MÓDULO DE LOGIN E AUTENTICAÇÃO
 // ============================================
 
-let usuarios = [];
 let usuarioLogado = null;
-
-// Inicializar dados de usuários no localStorage
-function inicializarUsuarios() {
-    if (localStorage.getItem('usuarios')) {
-        usuarios = JSON.parse(localStorage.getItem('usuarios'));
-    }
-    if (localStorage.getItem('usuarioLogado')) {
-        usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
-    }
-    if (usuarios.length === 0) {
-        usuarios.push({ id: 1, nome: 'João Silva', email: 'joao@teste.com', senha: '123456' });
-        localStorage.setItem('usuarios', JSON.stringify(usuarios));
-    }
-}
 
 // Abrir modal de login
 function abrirLogin() {
@@ -31,41 +16,68 @@ function fecharLogin() {
     if (modal) modal.style.display = 'none';
 }
 
-// Fazer login do usuário
-function fazerLogin(email, senha, lembrar) {
-    for (let i = 0; i < usuarios.length; i++) {
-        if (usuarios[i].email === email && usuarios[i].senha === senha) {
-            usuarioLogado = usuarios[i];
-            if (lembrar) {
-                localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-            } else {
-                sessionStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-            }
-            return true;
-        }
-    }
-    return false;
-}
-
 // Fazer logout do usuário
 function fazerLogout() {
     usuarioLogado = null;
     localStorage.removeItem('usuarioLogado');
     sessionStorage.removeItem('usuarioLogado');
-    atualizarBotao();
+    
+    fetch('/logout', { method: 'GET' })
+        .then(() => {
+            atualizarBotao();
+            window.location.href = '/';
+        })
+        .catch(err => {
+            console.error('Erro ao fazer logout:', err);
+            atualizarBotao();
+            window.location.href = '/';
+        });
 }
 
-// Atualizar aparência do botão de login
+// Atualizar aparência do botão de login/logout
 function atualizarBotao() {
     const btn = document.getElementById('loginBtn');
     if (!btn) return;
     
+    console.log('Atualizando botão. Usuário logado:', usuarioLogado);
+    
     if (usuarioLogado) {
-        btn.textContent = 'Olá, ' + usuarioLogado.nome;
-        btn.style.backgroundColor = '#28a745';
+        btn.textContent = 'LOGOUT';
+        btn.style.backgroundColor = '#dc3545';
+        btn.style.color = 'white';
+        btn.classList.add('logout-mode');
+        btn.classList.remove('login-mode');
+        btn.title = 'Clique para sair da sua conta';
     } else {
-        btn.textContent = 'Login';
+        btn.textContent = 'LOGIN';
         btn.style.backgroundColor = '';
+        btn.style.color = '';
+        btn.classList.add('login-mode');
+        btn.classList.remove('logout-mode');
+        btn.title = 'Clique para fazer login';
+    }
+}
+
+// Sincronizar com o servidor
+async function sincronizarComServidor() {
+    try {
+        const response = await fetch('/api/usuario-info');
+        const data = await response.json();
+        
+        console.log('Sincronização com servidor:', data);
+        
+        if (data.logado && data.usuario) {
+            usuarioLogado = data.usuario;
+            sessionStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+        } else {
+            usuarioLogado = null;
+            sessionStorage.removeItem('usuarioLogado');
+            localStorage.removeItem('usuarioLogado');
+        }
+        
+        atualizarBotao();
+    } catch (err) {
+        console.error('Erro ao sincronizar com servidor:', err);
     }
 }
 
@@ -76,7 +88,6 @@ function atualizarBotao() {
 let cart = [];
 let addedItems = new Set();
 
-// Carregar carrinho do localStorage
 function carregarCarrinho() {
     const raw = localStorage.getItem('laveja_cart');
     if (raw) {
@@ -88,146 +99,232 @@ function carregarCarrinho() {
             console.error('Erro ao carregar carrinho:', e);
             cart = [];
         }
-    } else {
-        cart = [];
     }
-    console.log('Carrinho carregado:', cart);
 }
 
-// Salvar carrinho no localStorage
 function salvarCarrinho() {
     localStorage.setItem('laveja_cart', JSON.stringify(cart));
-    console.log('Carrinho salvo:', cart);
 }
 
-// Atualizar interface do carrinho
 function atualizarCarrinho() {
-    console.log('Atualizando carrinho... Itens:', cart.length);
-    
     const cartCountEl = document.getElementById('cartCount');
+    
+    if (cartCountEl) cartCountEl.textContent = cart.length;
+}
+
+// ---------------------------
+// Renderizar / gerenciar carrinho na UI (substitua a função existente)
+// ---------------------------
+function renderCart() {
     const cartItemsEl = document.getElementById('cartItems');
     const cartEmptyEl = document.getElementById('cartEmpty');
-    const cartActionsEl = document.getElementById('cartActions');
-    
-    if (cartCountEl) {
-        cartCountEl.textContent = cart.length;
-        console.log('Badge atualizado para:', cart.length);
-    }
-    
-    if (cart.length === 0) {
+    const cartActions = document.getElementById('cartActions');
+    const totalValueEl = document.getElementById('totalValue');
+    const cartTotalWrapper = document.getElementById('cartTotal');
+    const cartCountEl = document.getElementById('cartCount');
+
+    if (cartCountEl) cartCountEl.textContent = cart.length;
+    if (!cartItemsEl) return; // não está na página de carrinho
+
+    // limpar lista
+    cartItemsEl.innerHTML = '';
+
+    if (!cart || cart.length === 0) {
+        if (cartEmptyEl) cartEmptyEl.style.display = 'block';
         if (cartItemsEl) cartItemsEl.style.display = 'none';
-        if (cartActionsEl) cartActionsEl.style.display = 'none';
-        if (cartEmptyEl) {
-            cartEmptyEl.style.display = 'block';
-            cartEmptyEl.textContent = 'Seu carrinho está vazio.';
-        }
-    } else {
-        if (cartEmptyEl) cartEmptyEl.style.display = 'none';
-        
-        if (cartItemsEl) {
-            cartItemsEl.innerHTML = '';
-            let total = 0;
-            
-            cart.forEach(function(item) {
-                const li = document.createElement('li');
-                li.className = 'cart-item';
-                
-                const left = document.createElement('div');
-                left.className = 'name';
-                left.textContent = item.name;
-                
-                const right = document.createElement('div');
-                right.className = 'price';
-                const priceNum = Number(item.price) || 0;
-                right.textContent = 'R$ ' + priceNum.toFixed(2).replace('.', ',');
-                
-                li.appendChild(left);
-                li.appendChild(right);
-                cartItemsEl.appendChild(li);
-                
-                total += priceNum;
-            });
-            
-            // Adicionar linha de total
-            const totalLi = document.createElement('li');
-            totalLi.className = 'cart-item-total';
-            totalLi.style.borderTop = '2px solid #ddd';
-            totalLi.style.paddingTop = '10px';
-            totalLi.style.marginTop = '10px';
-            totalLi.style.fontWeight = 'bold';
-            
-            const totalLeft = document.createElement('div');
-            totalLeft.className = 'name';
-            totalLeft.textContent = 'TOTAL';
-            
-            const totalRight = document.createElement('div');
-            totalRight.className = 'price';
-            totalRight.style.color = '#28a745';
-            totalRight.style.fontSize = '1.2em';
-            totalRight.textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
-            
-            totalLi.appendChild(totalLeft);
-            totalLi.appendChild(totalRight);
-            cartItemsEl.appendChild(totalLi);
-            
-            cartItemsEl.style.display = 'block';
-            console.log('Carrinho renderizado. Total:', total);
-        }
-        if (cartActionsEl) cartActionsEl.style.display = 'flex';
+        if (cartActions) cartActions.style.display = 'none';
+        if (cartTotalWrapper) cartTotalWrapper.style.display = 'none';
+        if (totalValueEl) totalValueEl.textContent = 'R$ 0,00';
+        return;
     }
+
+    if (cartEmptyEl) cartEmptyEl.style.display = 'none';
+    cartItemsEl.style.display = 'block';
+    if (cartActions) cartActions.style.display = 'flex';
+    if (cartTotalWrapper) cartTotalWrapper.style.display = 'flex';
+
+    // popular lista e calcular total
+    let total = 0;
+    cart.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'cart-item';
+        li.dataset.id = item.id;
+
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'cart-item-name';
+        nameDiv.textContent = item.name;
+
+        const priceDiv = document.createElement('div');
+        priceDiv.className = 'cart-item-price';
+        priceDiv.textContent = (Number(item.price) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'cart-item-remove';
+        removeBtn.textContent = 'Remover';
+        removeBtn.onclick = function() { removeFromCart(item.id); };
+
+        li.appendChild(nameDiv);
+        li.appendChild(priceDiv);
+        li.appendChild(removeBtn);
+
+        cartItemsEl.appendChild(li);
+
+        total += Number(item.price) || 0;
+    });
+
+    if (totalValueEl) totalValueEl.textContent = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
-// Função global para adicionar ao carrinho
+// ---------------------------
+// Limpar carrinho: tentar API e garantir limpeza local (substitua clear button handler)
+// ---------------------------
+document.addEventListener('DOMContentLoaded', function() {
+    // ...existing initialization code above ...
+
+    const clearBtn = document.getElementById('clearCart');
+    if (clearBtn) {
+        clearBtn.onclick = function() {
+            if (!confirm('Deseja limpar o carrinho?')) return;
+
+            // primeiro tenta limpar no servidor (se a rota existir)
+            fetch('/api/limpar_carrinho', { method: 'POST' })
+                .then(res => {
+                    // mesmo que falhe em servidor, seguimos para limpar local
+                    cart = [];
+                    addedItems.clear();
+                    salvarCarrinho();
+                    atualizarCarrinho();
+                    renderCart();
+
+                    // restaurar botões (index/catalogo)
+                    document.querySelectorAll('.botao, .solicitarBtn').forEach(btn => {
+                        if (btn.textContent.includes('Adicionado')) {
+                            btn.textContent = btn.classList.contains('botao-secundario') ? 'Contato' : 'Solicitar';
+                            btn.style.backgroundColor = '';
+                            btn.style.cursor = 'pointer';
+                            btn.style.pointerEvents = 'auto';
+                        }
+                    });
+                })
+                .catch(() => {
+                    // fallback: limpar local
+                    cart = [];
+                    addedItems.clear();
+                    salvarCarrinho();
+                    atualizarCarrinho();
+                    renderCart();
+                });
+        };
+    }
+
+    // ...existing initialization code below ...
+});
+
 window.lavejaAddToCart = function(id, name, price) {
-    console.log(`=== ADICIONANDO AO CARRINHO ===`);
-    console.log(`ID: ${id}, Nome: ${name}, Preço: ${price}`);
-    
     if (addedItems.has(id)) {
-        alert(`O item "${name}" já foi adicionado ao carrinho! Cada item pode ser adicionado apenas uma vez.`);
+        alert(`O item "${name}" já foi adicionado ao carrinho!`);
         return;
     }
 
     addedItems.add(id);
     const p = Number(price) || 0;
     cart.push({ id: id, name: name, price: p });
-    
-    console.log('Carrinho após adição:', cart);
-    
+
     salvarCarrinho();
     atualizarCarrinho();
+    renderCart(); // atualiza UI do carrinho se estiver na página
 
-    // Feedback visual no botão
-    const buttons = document.querySelectorAll('.botao');
+    const buttons = document.querySelectorAll('.botao, .solicitarBtn');
     buttons.forEach(btn => {
-        const onclick = btn.getAttribute('onclick');
-        if (onclick && onclick.includes(`lavejaAddToCart(${id},`)) {
+        const onclick = btn.getAttribute('onclick') || '';
+        const dataId = btn.dataset.itemId;
+        if (onclick.includes(`lavejaAddToCart(${id},`) || dataId == String(id)) {
             btn.textContent = 'Adicionado ✓';
             btn.style.backgroundColor = '#4CAF50';
             btn.style.cursor = 'not-allowed';
             btn.style.pointerEvents = 'none';
         }
     });
-
-    console.log(`Item "${name}" adicionado com sucesso!`);
 };
+
+// Remover item
+function removeFromCart(id) {
+    const idx = cart.findIndex(i => i.id == id);
+    if (idx === -1) return;
+    cart.splice(idx, 1);
+    addedItems.delete(Number(id));
+    salvarCarrinho();
+    atualizarCarrinho();
+    renderCart();
+
+    // restaurar botão no catálogo/index
+    const buttons = document.querySelectorAll('.botao, .solicitarBtn');
+    buttons.forEach(btn => {
+        const onclick = btn.getAttribute('onclick') || '';
+        const dataId = btn.dataset.itemId;
+        if (onclick.includes(`lavejaAddToCart(${id},`) || dataId == String(id)) {
+            btn.textContent = btn.classList.contains('botao-secundario') ? 'Contato' : 'Solicitar';
+            btn.style.backgroundColor = '';
+            btn.style.cursor = 'pointer';
+            btn.style.pointerEvents = 'auto';
+        }
+    });
+}
+
+// ============================================
+// FUNCIONALIDADE ADICIONAL: PROTEGER BOTÕES DA INDEX
+// ============================================
+function attachRequireLoginBehavior() {
+    // inclui o link do catálogo (é <a class="botao-login">) além dos demais botões
+    const selectors = [
+        '#btnSolicitar',
+        '.botao-principal',
+        '.botao-secundario',
+        '.solicitarBtn',
+        '.botao-whatsapp',
+        'a.botao-login'
+    ];
+
+    const elems = document.querySelectorAll(selectors.join(','));
+    elems.forEach(el => {
+        if (el.__loginHandlerAttached) return;
+        el.__loginHandlerAttached = true;
+
+        el.addEventListener('click', function(e) {
+            // não interferir com o botão de login (é <button id="loginBtn">)
+            if (el.id === 'loginBtn') return;
+
+            if (usuarioLogado) {
+                // usuário logado: segue o link normalmente se houver href válido
+                const href = el.getAttribute && el.getAttribute('href');
+                if (href && href !== '#' && !href.startsWith('javascript:')) {
+                    // permite comportamento padrão (seguir link)
+                    return;
+                }
+                // caso não tenha href, redireciona para catálogo
+                window.location.href = '/catalogo';
+                return;
+            }
+
+            // usuário NÃO logado: abre modal de login e impede navegação
+            e.preventDefault();
+            abrirLogin();
+        }, { passive: false });
+    });
+}
 
 // ============================================
 // INICIALIZAÇÃO DO DOCUMENTO
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('=== DOCUMENTO CARREGADO ===');
+    console.log('DOMContentLoaded disparado');
     
-    // Inicializar sistemas
-    inicializarUsuarios();
     carregarCarrinho();
     atualizarCarrinho();
 
-    // Restaurar usuário logado se estava em sessionStorage
-    if (!usuarioLogado && sessionStorage.getItem('usuarioLogado')) {
-        usuarioLogado = JSON.parse(sessionStorage.getItem('usuarioLogado'));
-    }
-    atualizarBotao();
+    // Sincronizar com o servidor primeiro
+    sincronizarComServidor();
 
     // ============================================
     // EVENT LISTENERS - LOGIN
@@ -236,36 +333,81 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginBtn = document.getElementById('loginBtn');
     if (loginBtn) {
         loginBtn.onclick = function() {
+            console.log('Botão clicado. usuarioLogado:', usuarioLogado);
+            
             if (usuarioLogado) {
-                if (confirm('Deseja sair?')) {
+                // Se está logado, fazer logout
+                if (confirm('Deseja fazer logout?')) {
                     fazerLogout();
                 }
             } else {
+                // Se não está logado, abrir modal de login
                 abrirLogin();
             }
         };
     }
 
     const closeLogin = document.querySelector('.close');
-    if (closeLogin) {
-        closeLogin.onclick = fecharLogin;
+    if (closeLogin) closeLogin.onclick = fecharLogin;
+
+    // Fechar modal clicando fora dele
+    const modal = document.getElementById('loginModal');
+    if (modal) {
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                fecharLogin();
+            }
+        };
     }
 
     const formLogin = document.getElementById('loginForm');
     if (formLogin) {
-        formLogin.onsubmit = function(e) {
+        formLogin.onsubmit = async function(e) {
             e.preventDefault();
+            
             const email = document.getElementById('email').value.trim();
             const senha = document.getElementById('senha').value;
-            const lembrar = document.getElementById('lembrar') && document.getElementById('lembrar').checked;
+            const lembrar = document.getElementById('lembrar') ? document.getElementById('lembrar').checked : false;
 
-            if (fazerLogin(email, senha, lembrar)) {
-                alert('Login ok!');
-                fecharLogin();
-                atualizarBotao();
-                formLogin.reset();
-            } else {
-                alert('Email ou senha errados.');
+            if (!email || !senha) {
+                alert('Por favor, preencha email e senha');
+                return;
+            }
+
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, senha })
+                });
+
+                const result = await response.json();
+                
+                if (result.ok) {
+                    usuarioLogado = result.usuario;
+                    
+                    console.log('Login bem-sucedido:', usuarioLogado);
+                    
+                    // Salvar na sessão do navegador (sempre)
+                    sessionStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+                    
+                    // Se marcou "Lembrar", salvar também no localStorage
+                    if (lembrar) {
+                        localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+                    }
+                    
+                    alert(result.msg);
+                    fecharLogin();
+                    atualizarBotao();
+                    formLogin.reset();
+                    
+                    // Recarregar página após 500ms
+                    setTimeout(() => window.location.reload(), 500);
+                } else {
+                    alert(result.msg || 'Erro ao fazer login');
+                }
+            } catch (err) {
+                alert('Erro de conexão: ' + err);
             }
         };
     }
@@ -278,20 +420,22 @@ document.addEventListener('DOMContentLoaded', function() {
     if (cadastroLink) {
         cadastroLink.onclick = function(e) {
             e.preventDefault();
-            alert('Cadastro temporariamente desativado. Entre em contato se precisar.');
+            window.location.href = '/cadastro';
         };
     }
 
     const socialGoogle = document.querySelector('.botao-social.google');
     if (socialGoogle) {
-        socialGoogle.onclick = function() {
-            window.location.href = '/google_login';
+        socialGoogle.onclick = function(e) {
+            e.preventDefault();
+            window.location.href = '/auth/google/login';
         };
     }
 
     const socialFb = document.querySelector('.botao-social.facebook');
     if (socialFb) {
-        socialFb.onclick = function() {
+        socialFb.onclick = function(e) {
+            e.preventDefault();
             alert('Login com Facebook não implementado aqui.');
         };
     }
@@ -303,22 +447,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearBtn = document.getElementById('clearCart');
     if (clearBtn) {
         clearBtn.onclick = function() {
-            if (confirm('Limpar carrinho?')) {
-                cart = [];
-                addedItems.clear();
-                salvarCarrinho();
-                atualizarCarrinho();
-                
-                // Restaurar botões para "Solicitar"
-                document.querySelectorAll('.botao').forEach(btn => {
-                    if (btn.textContent.includes('Adicionado')) {
-                        btn.textContent = 'Solicitar';
-                        btn.style.backgroundColor = '';
-                        btn.style.cursor = 'pointer';
-                        btn.style.pointerEvents = 'auto';
-                    }
+            if (!confirm('Deseja limpar o carrinho?')) return;
+
+            // primeiro tenta limpar no servidor (se a rota existir)
+            fetch('/api/limpar_carrinho', { method: 'POST' })
+                .then(res => {
+                    // mesmo que falhe em servidor, seguimos para limpar local
+                    cart = [];
+                    addedItems.clear();
+                    salvarCarrinho();
+                    atualizarCarrinho();
+                    renderCart();
+
+                    // restaurar botões (index/catalogo)
+                    document.querySelectorAll('.botao, .solicitarBtn').forEach(btn => {
+                        if (btn.textContent.includes('Adicionado')) {
+                            btn.textContent = btn.classList.contains('botao-secundario') ? 'Contato' : 'Solicitar';
+                            btn.style.backgroundColor = '';
+                            btn.style.cursor = 'pointer';
+                            btn.style.pointerEvents = 'auto';
+                        }
+                    });
+                })
+                .catch(() => {
+                    // fallback: limpar local
+                    cart = [];
+                    addedItems.clear();
+                    salvarCarrinho();
+                    atualizarCarrinho();
+                    renderCart();
                 });
-            }
         };
     }
 
@@ -327,6 +485,12 @@ document.addEventListener('DOMContentLoaded', function() {
         checkoutBtn.onclick = function() {
             if (cart.length === 0) {
                 alert('Carrinho vazio!');
+                return;
+            }
+
+            if (!usuarioLogado) {
+                alert('Faça login antes de finalizar a compra!');
+                abrirLogin();
                 return;
             }
 
@@ -343,16 +507,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     addedItems.clear();
                     salvarCarrinho();
                     atualizarCarrinho();
-                    
-                    // Restaurar botões para "Solicitar"
-                    document.querySelectorAll('.botao').forEach(btn => {
-                        if (btn.textContent.includes('Adicionado')) {
-                            btn.textContent = 'Solicitar';
-                            btn.style.backgroundColor = '';
-                            btn.style.cursor = 'pointer';
-                            btn.style.pointerEvents = 'auto';
-                        }
-                    });
                 } else {
                     alert('Erro ao finalizar compra: ' + (data.mensagem || 'Erro desconhecido'));
                 }
@@ -360,6 +514,14 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(err => alert('Erro de conexão: ' + err));
         };
     }
+
+    // depois de sincronizar com o servidor, atacha comportamento aos botões
+    // (usar pequeno timeout para garantir que sincronizarComServidor já atualizou usuarioLogado)
+    setTimeout(attachRequireLoginBehavior, 150);
+
+    // depois de carregar carrinho e sincronizar:
+    // garantir que cart já foi carregado por carregarCarrinho()
+    renderCart();
 });
 
 console.log('Script carregado com sucesso!');
