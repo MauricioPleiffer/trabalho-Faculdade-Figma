@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css')}}">
+    <title>Lave já - Catálogo</title>
+</head>
+<body>
+    <header>    
+        <div class="header">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='imagem/lave.ja.png') }}" alt="Logo Lave Já" width="60" style="border-radius: 5px;">
+            </div>
+            <nav>
+                <a href="{{ url_for('index')}}" class="botao-voltar">INÍCIO</a>
+                <a href="{{ url_for('view_carrinho')}}" class="botao-voltar">CARRINHO <span id="cartCount" class="cart-count">0</span></a>
+                <button id="loginBtn" class="botao-login">LOGIN</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="servicos1">
+            <div class="main-title">
+                <h1>Nossos Planos</h1>
+            </div>
+            <div class="servicos">
+                <div class="servico">
+                   <h3>Lavar e Secar</h3>
+                   <img src="{{ url_for('static', filename='imagem/catalogo1.jpg') }}" alt="Lavagem de roupas">
+                   <p>Lavagem completa com secagem rápida, para roupas do dia a dia</p>
+                   <p class="preco">R$ 28,00</p>
+                   <a href="#" class="botao" onclick="lavejaAddToCart(1, 'Lavar e Secar', 28.00); return false;">Solicitar</a>
+                </div>
+                <div class="servico">
+                   <h3>Lavar a Seco</h3>
+                   <img src="{{ url_for('static', filename='imagem/catalogo2.jpg') }}" alt="Lavagem a seco">
+                   <p>Ideal para roupas que precisam de um cuidado especial sem água</p>
+                   <p class="preco">R$ 44,00</p>
+                   <a href="#" class="botao" onclick="lavejaAddToCart(2, 'Lavar a Seco', 44.00); return false;">Solicitar</a> 
+                </div>
+                <div class="servico">
+                   <h3>Roupas Delicadas</h3>
+                   <img src="{{ url_for('static', filename='imagem/catalogo3.jpg') }}" alt="Roupas delicadas">
+                   <p>Serviço especializado para roupas finas e delicadas</p>
+                   <p class="preco">R$ 50,00</p>
+                   <a href="#" class="botao" onclick="lavejaAddToCart(3, 'Roupas Delicadas', 50.00); return false;">Solicitar</a> 
+                </div>
+            </div>
+
+            <div class="quilo">
+                <h1>Lavagem por Quilo</h1>
+            </div>
+
+            <div class="servicos">
+                <div class="servico">
+                   <h3>10 kg</h3>
+                   <img src="{{ url_for('static', filename='imagem/catalogo4.jpg') }}" alt="Lavagem 10kg">
+                   <p>Lavagem até 10kg</p>
+                   <p class="preco">R$ 65,00</p>
+                   <a href="#" class="botao" onclick="lavejaAddToCart(4, '10 kg', 65.00); return false;">Solicitar</a> 
+                </div>
+                <div class="servico">
+                   <h3>20 kg</h3>
+                   <img src="{{ url_for('static', filename='imagem/catalogo5.jpg') }}" alt="Lavagem 20kg">
+                   <p>Lavagem até 20kg</p>
+                   <p class="preco">R$ 129,00</p>
+                   <a href="#" class="botao" onclick="lavejaAddToCart(5, '20 kg', 129.00); return false;">Solicitar</a> 
+                </div>
+                <div class="servico">
+                   <h3>30 kg</h3>
+                   <img src="{{ url_for('static', filename='imagem/catalogo6.jpg') }}" alt="Lavagem 30kg">
+                   <p>Lavagem até 30kg</p>
+                   <p class="preco">R$ 195,00</p>
+                   <a href="#" class="botao" onclick="lavejaAddToCart(6, '30 kg', 195.00); return false;">Solicitar</a> 
+                </div>
+            </div>
+        </section>         
+    </main>
+
+    <footer class="footer-bottom">
+        <p>© 2025 LaveJá - Lavanderia Profissional. Todos os direitos reservados.</p>
+        <p>Desenvolvido com ❤️ para cuidar das suas roupas</p>
+    </footer>
+
+    <!-- Script principal da aplicação -->
+    <script src="{{ url_for('static', filename='script.js')}}"></script>
+</body>
+</html>

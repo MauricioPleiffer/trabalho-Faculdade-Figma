@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "nome": "wesley",
+    "sobrenome": "santos",
+    "email": "wesley@gmail.com",
+    "cpf": "99999999999",
+    "telefone": "11999999999",
+    "senhaHash": "9e1931399b314ea5c0b643530a6834f09cc007f72d4e39138703421689ca68fe",
+    "tipo_login": "email",
+    "criadoEm": "2025-11-21T10:27:14.261739"
+  }
+]

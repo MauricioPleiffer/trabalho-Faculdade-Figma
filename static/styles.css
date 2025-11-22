@@ -44,6 +44,17 @@ header {
   min-height: 70px;
 }
 
+.btn-voltar {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+}
+
 .logo img {
   height: 80px;
   width: auto;
@@ -87,6 +98,17 @@ nav a:hover {
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+}
+
+.cart-count {
+    background-color: red;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-size: 12px;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    display: none;
 }
 
 .botao:hover {
@@ -183,8 +205,13 @@ nav a:hover {
 }
 
 /* Seção de serviços */
+<<<<<<< HEAD
+.servicos1 {
+    padding: 80px 0;
+=======
 #servicos {
   padding: 80px 0;
+>>>>>>> aeb327df08837789047bc6b8d8419220165be5a1
 }
 
 .servicos {
@@ -194,6 +221,10 @@ nav a:hover {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
+}
+
+.servico p{
+    padding: 10px;
 }
 
 .servico {
@@ -242,6 +273,11 @@ nav a:hover {
   background-color: #f8f9fa;
 }
 
+.quilo {
+    text-align: center;
+    padding: 100px;
+}
+
 .cards-precos {
   max-width: 1200px;
   margin: 0 auto;
@@ -283,10 +319,17 @@ nav a:hover {
 }
 
 .preco {
+<<<<<<< HEAD
+    font-size: 25px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 30px;
+=======
   font-size: 32px;
   font-weight: bold;
   color: #007bff;
   margin-bottom: 30px;
+>>>>>>> aeb327df08837789047bc6b8d8419220165be5a1
 }
 
 .preco span {
@@ -307,6 +350,11 @@ nav a:hover {
   grid-template-columns: 1fr 1fr;
   gap: 50px;
   align-items: center;
+}
+
+.main-title{
+    text-align: center;
+    margin-bottom: 50PX;
 }
 
 .texto-sobre h2 {
@@ -438,6 +486,10 @@ nav a:hover {
   color: #ccc;
 }
 
+#footer-sla {
+    background-color: #333;
+}
+
 .contato-item {
   margin-bottom: 10px;
 }
@@ -502,11 +554,20 @@ nav a:hover {
 
 /* Footer Bottom */
 .footer-bottom {
+<<<<<<< HEAD
+    border-top: 1px solid #555;
+    margin-top: 20px;
+    padding-top: 15px;
+    text-align: center;
+    color: #ccc;
+    background-color: #333;
+=======
   border-top: 1px solid #555;
   margin-top: 20px;
   padding-top: 15px;
   text-align: center;
   color: #ccc;
+>>>>>>> aeb327df08837789047bc6b8d8419220165be5a1
 }
 
 .footer-bottom p {
@@ -544,6 +605,17 @@ nav a:hover {
   font-size: 16px;
   line-height: 1.2;
   height: auto;
+}
+
+.botao-voltar {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
 }
 
 .botao-login:hover {
@@ -675,6 +747,15 @@ nav a:hover {
   padding: 8px 14px;
   border-radius: 6px;
   cursor: pointer;
+}
+
+.box-carrinho {
+    background-color: #f8f9fa;
+    text-align: center;
+    margin-left: 100px;
+    margin-right: 100px;
+    height: 600px;
+    border-radius: 40px;
 }
 
 .btn-checkout {
@@ -855,6 +936,129 @@ nav a:hover {
   color: #0056b3;
 }
 
+.cart-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-clear, .btn-checkout {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.btn-clear {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-clear:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.btn-checkout {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-checkout:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.cart-items {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-item .name {
+    flex: 1;
+    font-weight: 500;
+}
+
+.cart-item .price {
+    text-align: right;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.cart-item-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-top: 2px solid #333;
+    border-bottom: 2px solid #333;
+    margin-top: 10px;
+}
+
+.cart-item-total .name {
+    flex: 1;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.cart-item-total .price {
+    text-align: right;
+    color: #28a745;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+#cartEmpty {
+    text-align: center;
+    padding: 40px 20px;
+    font-size: 1.1em;
+    color: #666;
+}
+
+.box-carrinho {
+    background-color: #f9f9f9;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.box-carrinho h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2em;
+    border-bottom: 3px solid #007bff;
+    padding-bottom: 15px;
+}
+
+#cartArea {
+    background-color: white;
+    padding-bottom: 325px;
+    padding: fixed;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.cart-items li:last-child {
+    border-bottom: none;
+        }
+
 /* Estilos específicos para o modal de cadastro */
 .close-cadastro {
   color: white;
@@ -959,6 +1163,149 @@ nav a:hover {
 }
 
 @media (max-width: 480px) {
+<<<<<<< HEAD
+    .header {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .texto-principal h1 {
+        font-size: 28px;
+    }
+    
+    .botoes {
+        text-align: center;
+    }
+    
+    .botao-principal, .botao-secundario {
+        display: block;
+        margin: 10px 0;
+    }
+    
+    nav {
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    
+    nav a {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .botao-login {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+        line-height: inherit !important;
+        height: auto !important;
+    }
+    
+    /* Modal para dispositivos móveis pequenos */
+    .modal-content {
+        margin: 5% auto;
+        width: 98%;
+        max-width: 350px;
+    }
+    
+    .modal-header {
+        padding: 15px 20px;
+    }
+    
+    .modal-header h2 {
+        font-size: 18px;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .input-group input {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .botao-login-submit {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    /* Rodapé para mobile */
+    .footer-section {
+        width: 100%;
+    }
+}
+
+/* Estilos específicos do carrinho */
+.cart-container {
+    max-width: 980px;
+    margin: 30px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color: #333;
+}
+.cart-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:16px;
+}
+.cart-subtitle { color:#666; margin:4px 0 0; font-size:14px; }
+.cart-items { list-style:none; margin:0; padding:0; display:block; }
+.cart-item {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #f0f0f0;
+    margin-bottom:10px;
+    background: linear-gradient(180deg,#ffffff,#fbfbfb);
+}
+.cart-item-name { flex:1; font-weight:600; color:#222; }
+.cart-item-price { width:120px; text-align:right; font-weight:700; color:#0a7f3b; }
+.cart-item-remove {
+    margin-left:12px;
+    background:#ff6b6b;
+    border:none;
+    color:white;
+    padding:8px 10px;
+    border-radius:6px;
+    cursor:pointer;
+}
+.cart-total {
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:16px;
+    margin-top:12px;
+    font-size:18px;
+    font-weight:700;
+}
+.cart-total-value { color:#0a7f3b; font-size:20px; }
+.cart-empty { text-align:center; color:#666; padding:36px 0; }
+
+.cart-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:12px; }
+.btn-clear {
+    background:#f5f5f5;
+    border:1px solid #e2e2e2;
+    color:#333;
+    padding:10px 14px;
+    border-radius:8px;
+    cursor:pointer;
+}
+.btn-clear:hover { background:#efefef; }
+.btn-checkout {
+    background:#007bff;
+    color:white;
+    border:none;
+    padding:10px 14px;
+    border-radius:8px;
+    cursor:pointer;
+}
+.btn-checkout:hover { background:#0069d9; }
+=======
   .header {
     flex-direction: column;
     gap: 20px;
@@ -1029,3 +1376,4 @@ nav a:hover {
     width: 100%;
   }
 }
+>>>>>>> aeb327df08837789047bc6b8d8419220165be5a1
