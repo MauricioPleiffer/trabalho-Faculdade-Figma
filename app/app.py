@@ -2,7 +2,8 @@ from flask import Flask, render_template, session, redirect, url_for
 import cadastro
 import carrinho
 import os
-
+from flask_dance.contrib.google import make_google_blueprint, google
+from flask import jsonify
 
 # Caminhos para templates e arquivos estáticos
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
@@ -15,13 +16,46 @@ app = Flask(__name__,
 
 app.secret_key = 'tenis123'
 
-
-
 # Registro dos blueprints existentes
 app.register_blueprint(cadastro.cadastro_bp)
 app.register_blueprint(carrinho.carrinho_bp)
-app.register_blueprint(cadastro.google_bp, url_prefix="/login")
 
+# ---------------------------
+# LOGIN COM GOOGLE (Flask-Dance)
+# ---------------------------
+
+# Permitir HTTP local (apenas para testes)
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
+google_bp = make_google_blueprint(
+    client_id="96734921781-vpg8c994qchlccki3qm84o6522v0b586.apps.googleusercontent.com",
+    client_secret="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",
+    scope=[
+        "openid",
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email"
+    ],
+    redirect_to="google_login"  # NOME DA ROTA, NÃO URL!
+)
+app.register_blueprint(google_bp, url_prefix="/login")
+
+@app.route("/google_login")
+def google_login():
+    if not google.authorized:
+        return redirect(url_for("google.login"))
+    
+    resp = google.get("/oauth2/v2/userinfo")
+    if not resp.ok:
+        return "Erro ao acessar informações do Google", 400
+
+    user_info = resp.json()
+    session['usuario'] = {
+        "nome": user_info["name"],
+        "email": user_info["email"],
+        "foto": user_info.get("picture"),
+        "tipo_login": "google"
+    }
+    return redirect(url_for("index"))
 
 # ---------------------------
 # ROTA PRINCIPAL
@@ -51,11 +85,25 @@ def index():
     total = sum(item['preco'] for item in carrinho_atual)
     usuario = session.get('usuario')
     return render_template('index.html',
+                           servicos=servicos,
                            carrinho=carrinho_atual,
                            total=total,
                            usuario=usuario)
 
+@app.route('/cadastro')
+def cadastro_page():
+    return render_template('cadastro.html')
+
+# ---------------------------
+# LOGOUT
+# ---------------------------
+
+@app.route("/auth/logout", methods=["POST"])
+def logout():
+    session.pop('usuario', None)
+    return jsonify({"ok": True})
+
+# ---------------------------
 
 if __name__ == '__main__':
     app.run(debug=True)
-
