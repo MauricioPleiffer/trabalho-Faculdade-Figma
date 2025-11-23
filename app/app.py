@@ -1,6 +1,3 @@
-from flask import Flask, render_template, session, redirect, url_for
-import cadastro
-import carrinho
 import os
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask import jsonify
@@ -57,12 +54,32 @@ def google_login():
     }
     return redirect(url_for("index"))
 
-# ---------------------------
-# ROTA PRINCIPAL
-# ---------------------------
+# Registrar blueprint do Google: preferir cadastro.google_bp se presente
+if hasattr(cadastro, 'google_bp'):
+    try:
+        app.register_blueprint(cadastro.google_bp, url_prefix="/auth/google")
+    except Exception:
+        pass
+else:
+    # Cria blueprint local usando variáveis de ambiente (não inclua secrets no repo)
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+    GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '')
+    GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '')
+    if GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET:
+        google_bp = make_google_blueprint(
+            client_id=GOOGLE_CLIENT_ID,
+            client_secret=GOOGLE_CLIENT_SECRET,
+            scope=[
+                "openid",
+                "https://www.googleapis.com/auth/userinfo.profile",
+                "https://www.googleapis.com/auth/userinfo.email"
+            ],
+            redirect_to="google_callback"
+        )
+        app.register_blueprint(google_bp, url_prefix="/auth/google")
 
 servicos = [    
-    {"id": 1, "nome": "Lavar e Secar", "preco": 28.00} ,
+    {"id": 1, "nome": "Lavar e Secar", "preco": 28.00},
     {"id": 2, "nome": "Lavar a Seco", "preco": 44.00},
     {"id": 3, "nome": "Roupas Delicadas", "preco": 50.00},
     {"id": 4, "nome": "10 kg", "preco": 65.00},
@@ -70,10 +87,16 @@ servicos = [
     {"id": 6, "nome": "30 kg", "preco": 195.00}
 ]
 
+@app.route('/')
+def index():
+    usuario = session.get('usuario')
+    return render_template('index.html', usuario=usuario)
 
 @app.route('/catalogo')
 def catalogo():
-    return render_template('catalogo.html')
+    if os.path.exists(os.path.join(template_dir, 'catalogo.html')):
+        return render_template('catalogo.html', servicos=servicos)
+    return redirect(url_for('index'))
 
 @app.route('/carrinho')
 def carrinho():

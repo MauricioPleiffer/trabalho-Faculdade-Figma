@@ -1,23 +1,8 @@
 // ============================================
-// MÓDULO DE LOGIN
+// MÓDULO DE LOGIN E AUTENTICAÇÃO
 // ============================================
 
-let usuarios = [];
 let usuarioLogado = null;
-
-// Inicializar dados de usuários no localStorage
-function inicializarUsuarios() {
-    if (localStorage.getItem('usuarios')) {
-        usuarios = JSON.parse(localStorage.getItem('usuarios'));
-    }
-    if (localStorage.getItem('usuarioLogado')) {
-        usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
-    }
-    if (usuarios.length === 0) {
-        usuarios.push({ id: 1, nome: 'João Silva', email: 'joao@teste.com', senha: '123456' });
-        localStorage.setItem('usuarios', JSON.stringify(usuarios));
-    }
-}
 
 // Abrir modal de login
 function abrirLogin() {
@@ -31,22 +16,6 @@ function fecharLogin() {
     if (modal) modal.style.display = 'none';
 }
 
-// Fazer login do usuário
-function fazerLogin(email, senha, lembrar) {
-    for (let i = 0; i < usuarios.length; i++) {
-        if (usuarios[i].email === email && usuarios[i].senha === senha) {
-            usuarioLogado = usuarios[i];
-            if (lembrar) {
-                localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-            } else {
-                sessionStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
-            }
-            return true;
-        }
-    }
-    return false;
-}
-
 // Fazer logout do usuário
 function fazerLogout() {
     usuarioLogado = null;
@@ -57,7 +26,7 @@ function fazerLogout() {
     console.log('Logout realizado com sucesso');
 }
 
-// Atualizar aparência do botão de login
+// Atualizar aparência do botão de login/logout
 function atualizarBotao() {
     var b = document.getElementById('loginBtn');
     if (!b) return;
@@ -77,7 +46,6 @@ function atualizarBotao() {
 let cart = [];
 let addedItems = new Set();
 
-// Carregar carrinho do localStorage
 function carregarCarrinho() {
     const raw = localStorage.getItem('laveja_cart');
     if (raw) {
@@ -89,19 +57,13 @@ function carregarCarrinho() {
             console.error('Erro ao carregar carrinho:', e);
             cart = [];
         }
-    } else {
-        cart = [];
     }
-    console.log('Carrinho carregado:', cart);
 }
 
-// Salvar carrinho no localStorage
 function salvarCarrinho() {
     localStorage.setItem('laveja_cart', JSON.stringify(cart));
-    console.log('Carrinho salvo:', cart);
 }
 
-// Atualizar interface do carrinho
 function atualizarCarrinho() {
     const cartItemsEl = document.getElementById('cartItems');
     const cartEmptyEl = document.getElementById('cartEmpty');
@@ -149,39 +111,143 @@ function atualizarCarrinho() {
     if (cartActionsEl) cartActionsEl.style.display = 'flex';
 }
 
-// Função global para adicionar ao carrinho
+// ---------------------------
+// Limpar carrinho: tentar API e garantir limpeza local (substitua clear button handler)
+// ---------------------------
+document.addEventListener('DOMContentLoaded', function() {
+    // ...existing initialization code above ...
+
+    const clearBtn = document.getElementById('clearCart');
+    if (clearBtn) {
+        clearBtn.onclick = function() {
+            if (!confirm('Deseja limpar o carrinho?')) return;
+
+            // primeiro tenta limpar no servidor (se a rota existir)
+            fetch('/api/limpar_carrinho', { method: 'POST' })
+                .then(res => {
+                    // mesmo que falhe em servidor, seguimos para limpar local
+                    cart = [];
+                    addedItems.clear();
+                    salvarCarrinho();
+                    atualizarCarrinho();
+                    renderCart();
+
+                    // restaurar botões (index/catalogo)
+                    document.querySelectorAll('.botao, .solicitarBtn').forEach(btn => {
+                        if (btn.textContent.includes('Adicionado')) {
+                            btn.textContent = btn.classList.contains('botao-secundario') ? 'Contato' : 'Solicitar';
+                            btn.style.backgroundColor = '';
+                            btn.style.cursor = 'pointer';
+                            btn.style.pointerEvents = 'auto';
+                        }
+                    });
+                })
+                .catch(() => {
+                    // fallback: limpar local
+                    cart = [];
+                    addedItems.clear();
+                    salvarCarrinho();
+                    atualizarCarrinho();
+                    renderCart();
+                });
+        };
+    }
+
+    // ...existing initialization code below ...
+});
+
 window.lavejaAddToCart = function(id, name, price) {
-    console.log(`=== ADICIONANDO AO CARRINHO ===`);
-    console.log(`ID: ${id}, Nome: ${name}, Preço: ${price}`);
-    
     if (addedItems.has(id)) {
-        alert(`O item "${name}" já foi adicionado ao carrinho! Cada item pode ser adicionado apenas uma vez.`);
+        alert(`O item "${name}" já foi adicionado ao carrinho!`);
         return;
     }
 
     addedItems.add(id);
     const p = Number(price) || 0;
     cart.push({ id: id, name: name, price: p });
-    
-    console.log('Carrinho após adição:', cart);
-    
+
     salvarCarrinho();
     atualizarCarrinho();
+    renderCart(); // atualiza UI do carrinho se estiver na página
 
-    // Feedback visual no botão
-    const buttons = document.querySelectorAll('.botao');
+    const buttons = document.querySelectorAll('.botao, .solicitarBtn');
     buttons.forEach(btn => {
-        const onclick = btn.getAttribute('onclick');
-        if (onclick && onclick.includes(`lavejaAddToCart(${id},`)) {
+        const onclick = btn.getAttribute('onclick') || '';
+        const dataId = btn.dataset.itemId;
+        if (onclick.includes(`lavejaAddToCart(${id},`) || dataId == String(id)) {
             btn.textContent = 'Adicionado ✓';
             btn.style.backgroundColor = '#4CAF50';
             btn.style.cursor = 'not-allowed';
             btn.style.pointerEvents = 'none';
         }
     });
-
-    console.log(`Item "${name}" adicionado com sucesso!`);
 };
+
+// Remover item
+function removeFromCart(id) {
+    const idx = cart.findIndex(i => i.id == id);
+    if (idx === -1) return;
+    cart.splice(idx, 1);
+    addedItems.delete(Number(id));
+    salvarCarrinho();
+    atualizarCarrinho();
+    renderCart();
+
+    // restaurar botão no catálogo/index
+    const buttons = document.querySelectorAll('.botao, .solicitarBtn');
+    buttons.forEach(btn => {
+        const onclick = btn.getAttribute('onclick') || '';
+        const dataId = btn.dataset.itemId;
+        if (onclick.includes(`lavejaAddToCart(${id},`) || dataId == String(id)) {
+            btn.textContent = btn.classList.contains('botao-secundario') ? 'Contato' : 'Solicitar';
+            btn.style.backgroundColor = '';
+            btn.style.cursor = 'pointer';
+            btn.style.pointerEvents = 'auto';
+        }
+    });
+}
+
+// ============================================
+// FUNCIONALIDADE ADICIONAL: PROTEGER BOTÕES DA INDEX
+// ============================================
+function attachRequireLoginBehavior() {
+    // inclui o link do catálogo (é <a class="botao-login">) além dos demais botões
+    const selectors = [
+        '#btnSolicitar',
+        '.botao-principal',
+        '.botao-secundario',
+        '.solicitarBtn',
+        '.botao-whatsapp',
+        'a.botao-login'
+    ];
+
+    const elems = document.querySelectorAll(selectors.join(','));
+    elems.forEach(el => {
+        if (el.__loginHandlerAttached) return;
+        el.__loginHandlerAttached = true;
+
+        el.addEventListener('click', function(e) {
+            // não interferir com o botão de login (é <button id="loginBtn">)
+            if (el.id === 'loginBtn') return;
+
+            if (usuarioLogado) {
+                // usuário logado: segue o link normalmente se houver href válido
+                const href = el.getAttribute && el.getAttribute('href');
+                if (href && href !== '#' && !href.startsWith('javascript:')) {
+                    // permite comportamento padrão (seguir link)
+                    return;
+                }
+                // caso não tenha href, redireciona para catálogo
+                window.location.href = '/catalogo';
+                return;
+            }
+
+            // usuário NÃO logado: abre modal de login e impede navegação
+            e.preventDefault();
+            abrirLogin();
+        }, { passive: false });
+    });
+}
 
 // ============================================
 // INICIALIZAÇÃO DO DOCUMENTO
@@ -240,6 +306,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (checkoutBtn) {
         checkoutBtn.onclick = finalizarCompra;
     }
+
+    // depois de sincronizar com o servidor, atacha comportamento aos botões
+    // (usar pequeno timeout para garantir que sincronizarComServidor já atualizou usuarioLogado)
+    setTimeout(attachRequireLoginBehavior, 150);
+
+    // depois de carregar carrinho e sincronizar:
+    // garantir que cart já foi carregado por carregarCarrinho()
+    renderCart();
 });
 
 console.log('Script carregado com sucesso!');
