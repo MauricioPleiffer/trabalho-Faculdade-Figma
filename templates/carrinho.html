@@ -28,21 +28,11 @@
                 <div>
                     <h2>Seu Carrinho</h2>
                     <div id="cartArea">
-                        <p id="cartEmpty" class="cart-empty">Seu carrinho está vazio.</p>
-                        <ul id="cartItems" class="cart-items" style="display: none;">
-                            <!-- Exemplo de item:
-                            <li class="cart-item">
-                                <span class="name">Lavar e Secar</span>
-                                <span class="price">R$ 28,00</span>
-                            </li>
-                            -->
-                        </ul>
-                        <div class="cart-item-total" id="cartTotal" style="display: none;">
-                            <span class="name">Total</span>
-                            <span class="price" id="cartTotalValue">R$ 0,00</span>
-                        </div>
-                        <div class="cart-actions" id="cartActions" style="display: none;">
-                            <button id="clearCart" class="btn-clear" (click)="LimparCarrinho()">Limpar carrinho</button>
+                        <p id="cartEmpty" class="cart-empty" style="display: none;">Seu carrinho está vazio.</p>
+                        <ul id="cartItems" class="cart-items"></ul>
+                        <div class="cart-item-total" id="cartTotal"></div>
+                        <div class="cart-actions" id="cartActions">
+                            <button id="clearCart" class="btn-clear">Limpar carrinho</button>
                             <button id="checkout" class="btn-checkout">Finalizar pedido</button>
                         </div>
                     </div>

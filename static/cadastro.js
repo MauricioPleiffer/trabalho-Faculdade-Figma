@@ -128,6 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
             email: emailValue,
             cpf: cpfDigits, 
             telefone: telDigits,
+            senha: senha.value,  // <- ADICIONE ESTA LINHA (senha em texto plano)
             senhaHash: senhaHash, 
             criadoEm: new Date().toISOString() 
         });

@@ -5,16 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lave Já - Lavanderia</title>
-    <!-- CSS do projeto -->
-
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <!-- <link rel="stylesheet" href="../static/styles.css">! -->
-    <!-- Estilos inline para algumas coisas -->
-    <style>
-        /* Estilos básicos */
-    </style>
-    <!-- SDK opcional do Google para visualização do botão -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
 
 <body>
@@ -26,7 +18,7 @@
                     <img src="{{ url_for('static', filename='imagem/lave.ja.png') }}" alt="Logo Lave Já" width="60" style="border-radius: 5px;">        
                 </div>
             <nav>
-                <a href="{{ url_for('catalogo')}}" class="botao-login">CATALOGO <span id="cartCount" class="cart-count">0</span></a>
+                <a href="{{ url_for('catalogo')}}" class="botao-login" id="catalogoLink">CATALOGO <span id="cartCount" class="cart-count">0</span></a>
                 {% if usuario %}
                     <button id="loginBtn" class="botao-login">Sair</button>
                     <span style="margin-left:10px;">Bem-vindo, {{ usuario.nome }}</span>
@@ -230,6 +222,13 @@
     if (localStorage.getItem('usuarioLogado')) usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
     if (usuarios.length === 0) { usuarios.push({ id: 1, nome: 'João Silva', email: 'joao@teste.com', senha: '123456' }); localStorage.setItem('usuarios', JSON.stringify(usuarios)); }
 
+    // ADICIONE ISTO: Sincronizar cadastros com usuários
+    var cadastros = JSON.parse(localStorage.getItem('cadastros') || '[]');
+    if (cadastros.length > 0) {
+        usuarios = usuarios.concat(cadastros);
+        localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    }
+
     function abrirLogin(){ var m = document.getElementById('loginModal'); if(m) m.style.display = 'block'; }
     function fecharLogin(){ var m = document.getElementById('loginModal'); if(m) m.style.display = 'none'; }
 
@@ -262,7 +261,12 @@
             return false; // Usuário não encontrado ou senha incorreta
         }
 
-        //function fazerLogout(){ usuarioLogado = null; localStorage.removeItem('usuarioLogado'); sessionStorage.removeItem('usuarioLogado'); atualizarBotao(); }
+        function fazerLogout(){ 
+            usuarioLogado = null; 
+            localStorage.removeItem('usuarioLogado'); 
+            sessionStorage.removeItem('usuarioLogado'); 
+            atualizarBotao(); 
+        }
 
         window.addEventListener('load', function () {
             // se estava em sessionStorage e não em localStorage, restaurar temporariamente
@@ -296,6 +300,16 @@
             var socialFb = document.querySelector('.botao-social.facebook'); if (socialFb) socialFb.onclick = function () { alert('Login com Facebook não implementado aqui.'); };
 
             var servicosLink = document.querySelector('a[href="#servicos"]'); if (servicosLink) servicosLink.onclick = function (e) { if (!usuarioLogado) { e.preventDefault(); abrirLogin(); } };
+
+            var catalogoLink = document.getElementById('catalogoLink');
+            if (catalogoLink) {
+                catalogoLink.onclick = function (e) {
+                    if (!usuarioLogado) {
+                        e.preventDefault();
+                        abrirLogin();
+                    }
+                };
+            }
 
             var serviceAnchors = document.querySelectorAll('a.botao-principal, a.botao, a.botao-secundario');
             for (var i = 0; i < serviceAnchors.length; i++) { (function (el) { if (el && el.tagName && el.tagName.toLowerCase() === 'a') { el.onclick = function (e) { if (!usuarioLogado) { e.preventDefault(); abrirLogin(); } }; } })(serviceAnchors[i]); }
