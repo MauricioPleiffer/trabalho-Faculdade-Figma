@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="../static/styles.css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='catalogo.css')}}">
+    <title>Lave já - Carrinho</title>
+    <style>
+        
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header">
+            <div class="logo">
+                <img src="/static/imagem/lave.ja.png" alt="Logo Lave Já" width="60" style="border-radius: 5px;">
+            </div>
+            <div>
+                <a href="{{ url_for('catalogo_page')}}" class="botao-catalogo">VOLTAR AO CATÁLOGO</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <section id="carrinho" class="servicos1">
+            <div class="box-carrinho">
+                <div class="box-itens">
+                    <h2>Seu Carrinho</h2>
+                    <div id="cartArea">
+                        {% if carrinho and carrinho|length > 0 %}
+                        <ul class="cart-items">
+                            {% for item in carrinho %}
+                            <li class="cart-item">
+                                <div class="name">{{ item.nome }}</div>
+                                <div class="price">R$ {{ '%.2f'|format(item.preco) }}</div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        <p><strong>Total: R$ {{ '%.2f'|format(total) }}</strong></p>
+                        <div class="cart-actions">
+                            <a href="/auth/limpar_carrinho" class="btn-clear">Limpar carrinho</a>
+                            <button id="checkout" class="btn-checkout">Finalizar pedido</button>
+                        </div>
+                        {% else %}
+                        <p id="cartEmpty" class="cart-empty">Seu carrinho está vazio.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="footer-bottom">
+        <div id="footer-bottom">
+            <p>© 2025 LaveJá - Lavanderia Profissional. Todos os direitos reservados.</p>
+            <p>Desenvolvido com ❤️ para cuidar das suas roupas</p>
+        </div>
+        <div class="footer-completo"></div>
+    </footer>
+</body>
+</html>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkoutBtn = document.getElementById('checkout');
+        if (!checkoutBtn) return;
+        checkoutBtn.addEventListener('click', function () {
+            if (!cart || cart.length === 0) { alert('Carrinho vazio!'); return; }
+            fetch('/auth/finalizar_compra', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cart: cart })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.sucesso) {
+                    alert(data.mensagem);
+                    // Após finalizar, redireciona para a mesma página para mostrar carrinho vazio (servidor irá limpar a sessão se desejar)
+                    window.location.href = '/carrinho';
+                } else {
+                    alert('Erro ao finalizar: ' + (data.mensagem || 'Erro desconhecido'));
+                }
+            })
+            .catch(err => alert('Erro de conexão: ' + err));
+        });
+    });
+</script>

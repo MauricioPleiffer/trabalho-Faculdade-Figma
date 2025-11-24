@@ -6,9 +6,13 @@ carrinho_bp = Blueprint('carrinho', __name__, template_folder='../templates', ur
 
 
 
-servicos = [    
-    {"id": 1, "nome": "Lavagem Simples", "preco": 15.00} ,
-    {"id": 2, "nome": "Lavagem + Passadoria", "preco": 25.00},
+servicos = [
+    {"id": 1, "nome": "Lavar e Secar", "preco": 28.00},
+    {"id": 2, "nome": "Lavar a Seco", "preco": 44.00},
+    {"id": 3, "nome": "Roupas Delicadas", "preco": 50.00},
+    {"id": 4, "nome": "10 kg", "preco": 65.00},
+    {"id": 5, "nome": "20 kg", "preco": 129.00},
+    {"id": 6, "nome": "30 kg", "preco": 195.00},
 ]
 
 
@@ -23,11 +27,22 @@ def adicionar_ao_carrinho():
 
     servico = next((s for s in servicos if s['id'] == servico_id), None)
     if servico:
+        # Permitir adicionar múltiplos itens diferentes ao carrinho.
         carrinho = session.get('carrinho', [])
-        carrinho.append(servico)
-        session['carrinho'] = carrinho
+        exists = any(int(item.get('id')) == int(servico_id) for item in carrinho)
+        if not exists:
+            carrinho.append(servico)
+            session['carrinho'] = carrinho
         total = sum(item['preco'] for item in carrinho)
-        return jsonify({'sucesso': True, 'nome': servico['nome'], 'preco': servico['preco'], 'total': total})
+        count = len(carrinho)
+        return jsonify({
+            'sucesso': True,
+            'nome': servico['nome'],
+            'preco': servico['preco'],
+            'total': total,
+            'count': count,
+            'mensagem': 'Adicionado ao carrinho' if not exists else 'Item já no carrinho'
+        })
     return jsonify({'sucesso': False, 'mensagem': 'Serviço não encontrado'}), 404
 
 
@@ -43,7 +58,8 @@ def ver_carrinho():
 def limpar_carrinho():
     # Remover a chave correta da sessão
     session.pop('carrinho', None)
-    return redirect(url_for('ver_carrinho'))
+    # Redireciona para a rota do app que mostra o carrinho ('carrinho_page')
+    return redirect(url_for('carrinho_page'))
 
 @carrinho_bp.route('/finalizar_compra', methods=['POST'])   
 def finalizar_compra():

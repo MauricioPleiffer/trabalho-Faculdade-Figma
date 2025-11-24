@@ -25,11 +25,7 @@
                     style="border-radius: 5px;">
             </div>
             <nav>
-                <a href="#servicos">Serviços</a>
-                <a href="#precos">Preços</a>
-                <a href="#sobre">Sobre</a>
-                <a href="#contato">Contato</a>
-                <a href="#carrinho" class="botao">Carrinho <span id="cartCount" class="cart-count">0</span></a>
+                <a href="{{ url_for('catalogo_page') }}" class="botao">CATALOGO</a>
                 <button id="loginBtn" class="botao-login">Login</button>
                 {% if session.usuario %}
                 <p class="user-info">
@@ -89,14 +85,12 @@
                 <div class="card-preco">
                     <h4>Lavagem Simples</h4>
                     <p class="preco">R$15<span>/kg</span></p>
-                    <a href="#carrinho" class="botao"
-                        onclick="lavejaAddToCart(1, 'Lavagem Simples', 15.00)">Solicitar</a>
+                    <a href="#carrinho" class="botao">Solicitar</a>
                 </div>
                 <div class="card-preco destaque">
                     <h4>Lavagem + Passadoria</h4>
                     <p class="preco">R$25<span>/kg</span></p>
-                    <a href="#carrinho" class="botao"
-                        onclick="lavejaAddToCart(2, 'Lavagem + Passadoria', 25.00)">Solicitar</a>
+                    <a href="#carrinho" class="botao">Solicitar</a>
                 </div>
                 <div class="card-preco">
                     <h4>Serviço Completo</h4>
@@ -119,27 +113,6 @@
                 </div>
                 <div class="imagem-sobre">
                     <img src="{{ url_for('static', filename='imagem/unnamed (1).png') }}" alt="Sobre a Lave Já">
-                </div>
-            </div>
-        </section>
-
-        <!-- Seção Carrinho (placeholder) -->
-        <section id="carrinho" class="carrinho">
-            <div class="container-carrinho">
-                <h2>Seu Carrinho</h2>
-                <div id="cartArea">
-                    {% if carrinho %}
-                    <p>{{ carrinho[0].nome }} - R$ {{ carrinho[0].preco }}</p>
-                    <p><strong>Total: R$ {{ total }}</strong></p>
-                    {% else %}
-                    <p id="cartEmpty" class="cart-empty">Seu carrinho está vazio. Faça login para adicionar serviços ou
-                        visualizar itens.</p>
-                    {% endif %}
-                    <ul id="cartItems" class="cart-items" style="display: none;"></ul>
-                    <div class="cart-actions" id="cartActions">
-                        <button id="clearCart" class="btn-clear">Limpar carrinho</button>
-                        <button id="checkout" class="btn-checkout">Finalizar pedido</button>
-                    </div>
                 </div>
             </div>
         </section>

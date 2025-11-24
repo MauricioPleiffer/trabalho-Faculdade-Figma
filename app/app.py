@@ -63,6 +63,10 @@ def google_login():
 servicos = [
     {"id": 1, "nome": "Lavagem Simples", "preco": 15.00},
     {"id": 2, "nome": "Lavagem + Passadoria", "preco": 25.00},
+    {"id": 3, "nome": "Roupas Delicadas", "preco": 50.00},
+    {"id": 4, "nome": "10 kg", "preco": 65.00},
+    {"id": 5, "nome": "20 kg", "preco": 129.00},
+    {"id": 6, "nome": "30 kg", "preco": 195.00},
 ]
 
 @app.route('/')
@@ -79,6 +83,22 @@ def index():
 @app.route('/cadastro')
 def cadastro_page():
     return render_template('cadastro.html')
+
+@app.route('/carrinho')
+def carrinho_page():
+    carrinho_atual = session.get('carrinho', [])
+    total = sum(item['preco'] for item in carrinho_atual)
+    usuario = session.get('usuario')
+    return render_template('carrinho.html',
+                           carrinho=carrinho_atual,
+                           total=total,
+                           usuario=usuario)
+
+@app.route('/catalogo')
+def catalogo_page():
+    return render_template('catalogo.html')
+
+
 
 # ---------------------------
 # LOGOUT
