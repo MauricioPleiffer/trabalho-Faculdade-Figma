@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Pagamento.css') }}">
+    <title>Pagamento</title>
+</head>
+<body>
+    
+    <div class="container">
+        <form action="/pagamento" method="post">
+            <div class="row">
+                <div class="column">
+                    <h3 class="title">Endereço</h3>
+                    <div class="inputBox">
+                        <span>Nome:</span>
+                        <input type="text" name="nome" placeholder="Gabrie Lima" required>
+                    </div>
+                    <div class="inputBox">
+                        <span>E-mail:</span>
+                        <input type="text" name="email" placeholder="biel.ferreira@gmail.com" required>
+                    </div>
+                    <div class="inputBox">
+                        <span>Endereço:</span>
+                        <input type="text" name="endereco" placeholder="Rua das Flores, Nº 123" required>
+                    </div>
+                    <div class="inputBox">
+                        <span>Cidade:</span>
+                        <input type="text" name="cidade" placeholder="Brasil" required>
+                    </div>
+                    <div class="inputBox">
+                        <span>Estado:</span>
+                        <input type="text" name="estado" placeholder="SP" required>
+                    </div>
+                    <div class="inputBox">
+                        <span>CEP:</span>
+                        <input type="text" name="cep" placeholder="123456-010" required>
+                    </div>
+                </div>
+
+                <div class="column">
+                    <h3 class="title">Pagamento</h3>
+                    <div class="inputBox">
+                        <span>cartões aceitos:</span>
+                        <img src="{{ url_for('static', filename='imagem/logoCart.jpg') }}" alt="">
+                    </div>
+                    <div class="inputBox">
+                        <span>Nome no cartão:</span>
+                        <input type="text" name="nomecart" placeholder="Gabrie Lima" required>
+                    </div>
+                    <div class="inputBox">
+                        <span>Numero do cartão:</span>
+                        <input type="text" name="numcart" placeholder="1234 5678 9123 0000" required>
+                    </div>
+                    <div class="inputBox">
+                        <span>Mes de vencimento:</span>
+                        <input type="text" name="mesven" placeholder="06" required>
+                    </div>
+                    <div class="inputBox">
+                        <span>Ano de vencimento:</span>
+                        <input type="text" name="anoven" placeholder="2030" required>
+                    </div>
+                    <div class="inputBox">
+                        <span>Codigo de Segurança:</span>
+                        <input type="text" name="codseg" placeholder="248" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn">Pagar Agora</button>
+                
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='pagamento.js') }}"></script>
+
+</body>
+</html>
