@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <link rel="stylesheet" href="../static/styles.css"> -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='catalogo.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='carrinho.css')}}">
     <title>Lave já - Carrinho</title>
     <style>
         
@@ -36,7 +36,9 @@
                             </li>
                             {% endfor %}
                         </ul>
-                        <p><strong>Total: R$ {{ '%.2f'|format(total) }}</strong></p>
+                        <div class="total">
+                            <p><strong>Total: R$ {{ '%.2f'|format(total) }}</strong></p>
+                        </div>
                         <div class="cart-actions">
                             <a href="/auth/limpar_carrinho" class="btn-clear">Limpar carrinho</a>
                             <!-- <button id="checkout" class="btn-checkout">Finalizar pedido</button> -->

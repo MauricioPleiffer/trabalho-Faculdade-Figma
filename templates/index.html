@@ -32,7 +32,7 @@
                     style="border-radius: 5px;">
             </div>
             <nav>
-                <a href="{{ url_for('catalogo_page') }}" class="botao">CATALOGO</a>
+                <a href="{{ url_for('catalogo_page') }}" class="botao" onclick="verificarLogin(event)">CATALOGO</a>
                 <button id="loginBtn" class="botao-login">Login</button>
                 {% if session.usuario %}
                 <p class="user-info">
@@ -55,7 +55,7 @@
                     <p>Serviços profissionais de lavagem, passadoria e entrega. Cuide das suas roupas com quem entende
                         do assunto.</p>
                     <div class="botoes">
-                        <a href="#contato" class="botao-principal">Solicitar Serviço</a>
+                        <a href="{{ url_for('catalogo_page') }}" class="botao-principal" onclick="verificarLogin(event)">Solicitar Serviço</a>
                         <a href="#servicos" class="botao-secundario">Ver Serviços</a>
                     </div>
                 </div>
@@ -92,19 +92,19 @@
                 <div class="card-preco">
                     <h4>Lavagem Simples</h4>
                     <p class="preco">R$15<span>/kg</span></p>
-                    <a href="#carrinho" class="botao">Solicitar</a>
+                    <a href="{{ url_for('catalogo_page') }}" class="botao" onclick="verificarLogin(event)">Solicitar</a>
                 </div>
                 <div class="card-preco destaque">
                     <h4>Lavagem + Passadoria</h4>
                     <p class="preco">R$25<span>/kg</span></p>
-                    <a href="#carrinho" class="botao">Solicitar</a>
+                    <a href="{{ url_for('catalogo_page') }}" class="botao" onclick="verificarLogin(event)">Solicitar</a>
                 </div>
                 <div class="card-preco">
                     <h4>Serviço Completo</h4>
-                    <p class="preco">Sob consulta</p>
+                    <p id="#sobre" class="preco">Sob consulta</p>
                     <a href="#contato" class="botao-secundario">Contato</a>
                 </div>
-            </div>
+            </div> 
         </section>
 
         <!-- Seção sobre -->
@@ -230,9 +230,34 @@
         </div>
     </div>
 
+    <!-- Injetar status de login via Jinja antes do script principal -->
+        
+
     <script>
+
         // ------ Login via Flask (substitui o login localStorage) ------
 let usuarioLogado = null;
+        
+var usuarioLogadoGlobal = {{ 'true' if session.usuario else 'false' }};
+    // ------ Verificar se usuário está logado ------
+    function verificarLogin(event) {
+        event.preventDefault();
+        if (!usuarioLogadoGlobal) {
+            abrirLogin();
+            return false;
+        }
+        // Se logado, segue com o link original
+        var href = event.target.getAttribute('href');
+        if (href && !href.startsWith('http') && !href.startsWith('https')) {
+            if (href.startsWith('#')) {
+                document.querySelector(href).scrollIntoView({ behavior: 'smooth' });
+            } else {
+                window.location.href = href;
+            }
+        } else if (href && (href.startsWith('http') || href.startsWith('https'))) {
+            window.location.href = href;
+        }
+    }
 
 function abrirLogin(){ var m = document.getElementById('loginModal'); if(m) m.style.display = 'block'; }
 function fecharLogin(){ var m = document.getElementById('loginModal'); if(m) m.style.display = 'none'; }

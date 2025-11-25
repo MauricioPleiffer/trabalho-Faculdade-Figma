@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='catalogo.css')}}">
     <!-- <link rel="stylesheet" href="../static/styles.css"> -->
+    <style>
+        .botao { transition: transform .15s ease, background-color .2s ease, color .2s ease; }
+        .botao.added { background-color: #28a745; color: #fff; transform: translateY(-2px) scale(1.02); box-shadow: 0 6px 12px rgba(0,0,0,0.12); }
+        .botao.error { animation: shake .6s; }
+        .botao.loading { pointer-events: none; opacity: 0.85; }
+        .botao.disabled { pointer-events: none; opacity: 0.7; filter: saturate(.9); }
+        @keyframes shake { 10%, 90% { transform: translateX(-1px); } 20%,80% { transform: translateX(2px); } 30%,50%,70% { transform: translateX(-4px); } 40%,60% { transform: translateX(4px); } }
+    </style>
     <title>Lave já - Catálogo</title>
 </head>
 <body>
@@ -30,21 +38,21 @@
                    <img src="/static/imagem/catalogo1.jpg" alt="Lavagem de roupas">
                    <p>Lavagem completa com secagem rapida, para roupas do dia a dia</p>
                    <p class="preco">R$ 28,00</p>
-                   <a href="#" class="botao" onclick="addToCartAndGo(1)">Solicitar</a>
+                   <a href="#" class="botao" onclick="addToCartAndGo(1, this)">Solicitar</a>
                 </div>
                 <div class="servico">
                    <h3>Lavar a Seco</h3>
                    <img src="/static/imagem/catalogo2.jpg" alt="Lavagem de roupas">
                    <p>Ideal para roupas que precisam de um cuidado especial sem água</p>
                    <p class="preco">R$ 44,00</p>
-                   <a href="#" class="botao" onclick="addToCartAndGo(2)">Solicitar</a> 
+                   <a href="#" class="botao" onclick="addToCartAndGo(2, this)">Solicitar</a> 
                 </div>
                 <div class="servico">
                    <h3>Roupas Delicadas</h3>
                    <img src="/static/imagem/catalogo3.jpg" alt="Lavagem de roupas">
                    <p>Serviço especializado para roupas finas e delicadas</p>
                    <p class="preco">R$ 50,00</p>
-                   <a href="#" class="botao" onclick="addToCartAndGo(3)">Solicitar</a> 
+                   <a href="#" class="botao" onclick="addToCartAndGo(3, this)">Solicitar</a> 
                 </div>
             </div>
                 <div class="main-title">
@@ -56,21 +64,21 @@
                    <img src="/static/imagem/catalogo4.jpg" alt="Lavagem de roupas">
                    <p>Lavagem até 10kg</p>
                    <p class="preco">R$ 65,00</p>
-                   <a href="#" class="botao" onclick="addToCartAndGo(4)">Solicitar</a> 
+                   <a href="#" class="botao" onclick="addToCartAndGo(4, this)">Solicitar</a> 
                 </div>
                 <div class="servico">
                    <h3>20kg</h3>
                    <img src="/static/imagem/catalogo5.jpg" alt="Lavagem de roupas">
                    <p>Lavagem até 20kg</p>
                    <p class="preco">R$ 129,00</p>
-                   <a href="#" class="botao" onclick="addToCartAndGo(5)">Solicitar</a> 
+                   <a href="#" class="botao" onclick="addToCartAndGo(5, this)">Solicitar</a> 
                 </div>
                 <div class="servico">
                    <h3>30kg</h3>
                    <img src="/static/imagem/catalogo6.jpg" alt="Lavagem de roupas">
                    <p>Lavagem até 30kg</p>
                    <p class="preco">R$ 195,00</p>
-                   <a href="#" class="botao" onclick="addToCartAndGo(6)">Solicitar</a> 
+                   <a href="#" class="botao" onclick="addToCartAndGo(6, this)">Solicitar</a> 
                 </div>
             </div>
         </section>         
@@ -80,14 +88,17 @@
             <p>© 2025 LaveJá - Lavanderia Profissional. Todos os direitos reservados.</p>
             <p>Desenvolvido com ❤️ para cuidar das suas roupas</p>
         </div>
-        <div class="footer-completo"></div>
     </footer>
 </body>
 </html>
 
 <script>
     // Envia o ID do serviço para o endpoint do blueprint de carrinho
-    async function addToCartAndGo(servicoId) {
+    async function addToCartAndGo(servicoId, el) {
+        const btn = el || null;
+        if (btn && btn.dataset.added === 'true') return; // já solicitado, ignora
+        const originalText = btn ? (btn.textContent || btn.innerText) : null;
+        if (btn) btn.classList.add('loading');
         try {
             const body = 'servico_id=' + encodeURIComponent(servicoId);
             const resp = await fetch('/auth/adicionar_ao_carrinho', {
@@ -96,17 +107,32 @@
                 body: body
             });
             const data = await resp.json();
-                    if (resp.ok && data.sucesso) {
-                        // Atualiza o contador no cabeçalho (se existir) e mostra confirmação
-                        const countEl = document.getElementById('cartCount');
-                        if (countEl && typeof data.count !== 'undefined') countEl.textContent = data.count;
-                        alert((data.mensagem || 'Adicionado ao carrinho') + ': ' + data.nome + ' — R$ ' + Number(data.preco).toFixed(2));
-                    } else {
-                        alert('Erro ao adicionar ao carrinho: ' + (data.mensagem || 'Erro desconhecido'));
-                    }
+            if (resp.ok && data.sucesso) {
+                const countEl = document.getElementById('cartCount');
+                if (countEl && typeof data.count !== 'undefined') countEl.textContent = data.count;
+                if (btn) {
+                    btn.classList.remove('error');
+                    btn.classList.add('added', 'disabled');
+                    btn.dataset.added = 'true';
+                    btn.textContent = 'Adicionado';
+                    // mantém o estado adicionado permanentemente até o usuário limpar o carrinho
+                    btn.classList.remove('loading');
+                }
+            } else {
+                if (btn) {
+                    btn.classList.add('error');
+                    setTimeout(() => btn.classList.remove('error'), 800);
+                    btn.classList.remove('loading');
+                }
+                console.error('Erro ao adicionar ao carrinho:', data.mensagem || data);
+            }
         } catch (err) {
             console.error(err);
-            alert('Erro de conexão ao adicionar ao carrinho.');
+            if (btn) {
+                btn.classList.add('error');
+                setTimeout(() => btn.classList.remove('error'), 800);
+                btn.classList.remove('loading');
+            }
         }
     }
 </script>
