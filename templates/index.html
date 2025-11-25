@@ -17,6 +17,13 @@
 </head>
 
 <body>
+
+    {% if request.args.get('status') == 'sucesso' %}
+        <div id="alerta-sucesso" class="alerta-sucesso">
+            Pagamento realizado com sucesso!
+        </div>
+    {% endif %}
+
     <!-- Cabeçalho do site -->
     <header>
         <div class="header">
@@ -434,6 +441,16 @@ window
             load(); updateUI();
         })();
     </script>
+
+    <script>
+        setTimeout(function() {
+            let alerta = document.getElementById("alerta-sucesso");
+            if (alerta) {
+                alerta.remove();
+            }
+        }, 3000);
+    </script>
+
 </body>
 
 </html>

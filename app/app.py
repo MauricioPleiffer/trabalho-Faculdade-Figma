@@ -1,12 +1,15 @@
 from flask import Flask, render_template, session, redirect, url_for
 import cadastro
 import carrinho
+import pagamento
 import os
 from flask_dance.contrib.google import make_google_blueprint, google
 
 # Caminhos para templates e arquivos estáticos
-template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
-static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static'))
+template_dir = os.path.abspath(os.path.join(
+    os.path.dirname(__file__), '..', 'templates'))
+static_dir = os.path.abspath(os.path.join(
+    os.path.dirname(__file__), '..', 'static'))
 
 app = Flask(__name__,
             template_folder=template_dir,
@@ -18,6 +21,7 @@ app.secret_key = 'tenis123'
 # Registro dos blueprints existentes
 app.register_blueprint(cadastro.cadastro_bp)
 app.register_blueprint(carrinho.carrinho_bp)
+app.register_blueprint(pagamento.pagamento_bp)
 
 # ---------------------------
 # LOGIN COM GOOGLE (Flask-Dance)
@@ -38,11 +42,12 @@ google_bp = make_google_blueprint(
 )
 app.register_blueprint(google_bp, url_prefix="/login")
 
+
 @app.route("/google_login")
 def google_login():
     if not google.authorized:
         return redirect(url_for("google.login"))
-    
+
     resp = google.get("/oauth2/v2/userinfo")
     if not resp.ok:
         return "Erro ao acessar informações do Google", 400
@@ -60,6 +65,7 @@ def google_login():
 # ROTA PRINCIPAL
 # ---------------------------
 
+
 servicos = [
     {"id": 1, "nome": "Lavagem Simples", "preco": 15.00},
     {"id": 2, "nome": "Lavagem + Passadoria", "preco": 25.00},
@@ -68,6 +74,7 @@ servicos = [
     {"id": 5, "nome": "20 kg", "preco": 129.00},
     {"id": 6, "nome": "30 kg", "preco": 195.00},
 ]
+
 
 @app.route('/')
 def index():
@@ -80,9 +87,11 @@ def index():
                            total=total,
                            usuario=usuario)
 
+
 @app.route('/cadastro')
 def cadastro_page():
     return render_template('cadastro.html')
+
 
 @app.route('/carrinho')
 def carrinho_page():
@@ -94,10 +103,10 @@ def carrinho_page():
                            total=total,
                            usuario=usuario)
 
+
 @app.route('/catalogo')
 def catalogo_page():
     return render_template('catalogo.html')
-
 
 
 # ---------------------------
@@ -110,6 +119,7 @@ def logout():
     return redirect(url_for('index'))
 
 # ---------------------------
+
 
 if __name__ == '__main__':
     app.run(debug=True)

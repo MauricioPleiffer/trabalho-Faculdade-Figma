@@ -39,7 +39,8 @@
                         <p><strong>Total: R$ {{ '%.2f'|format(total) }}</strong></p>
                         <div class="cart-actions">
                             <a href="/auth/limpar_carrinho" class="btn-clear">Limpar carrinho</a>
-                            <button id="checkout" class="btn-checkout">Finalizar pedido</button>
+                            <!-- <button id="checkout" class="btn-checkout">Finalizar pedido</button> -->
+                            <a href="{{ url_for('pagamento.pagamento_page') }}" class="btn-checkout">Finalizar pedido</a>
                         </div>
                         {% else %}
                         <p id="cartEmpty" class="cart-empty">Seu carrinho está vazio.</p>
